@@ -1,0 +1,64 @@
+{% from '_macros/global.html' import render_card, render_field, render_icon, render_tooltip %}
+
+{% set actions %}
+    <a href="#linkModal" class="btn btn-primary btn-sm d-flex" id="linkModalSubmit"
+       data-toggle="modal" data-action="{{ url_patterns['create'] }}" data-btn="Add">
+        {{ render_icon('plus', class='mr-2') }}
+        Add Link
+    </a>
+{% endset %}
+
+{% call render_card(heading, class='flex-1', body='h-100 scrollable', actions=actions) %}
+    {% if links %}
+        <ul class="list-group list-group-flush with-border">
+            {% for link in links %}
+                {% set link_update_url = url_patterns['update']|replace('{}', link.id) %}
+                {% set link_delete_url = url_patterns['delete']|replace('{}', link.id) %}
+
+                <li class="list-group-item d-block d-lg-flex justify-content-between align-items-center">
+                    <div class="col-12 col-lg-2 px-0 pr-lg-3">
+                        {# TODO: find better way to deal with process_data and it's 'None' output instead of hiding it #}
+                        <input type="hidden" value="{{ form.link_type.process_data(link.link_type) }}">
+
+                        {{ form.link_type.data }}
+                    </div>
+                    <div class="col-12 col-lg-9 px-0 mr-auto">
+                        <div class="input-group">
+                            {{ render_field(form.link, value=link.url, label=False) }}
+
+                            <div class="input-group-append">
+                                <button class="btn btn-primary h-100 px-3 d-flex align-items-center clipboard"
+                                        type="button">
+                                    {{ render_icon('clipboard', class='mr-lg-2') }}
+                                    <span class="d-none d-lg-inline">Copy Link</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-group d-flex-inline d-lg-none" role="group">
+                        {% call render_tooltip('Edit link', placement='left', class='py-2') %}
+                            <a href="#linkModal"
+                               class="text-secondary"
+                               data-toggle="modal"
+                               data-action="{{ link_update_url }}"
+                               data-type-value="{{ form.link_type.data }}"
+                               data-link-value="{{ link.url }}" data-btn="Save">
+                                {{ render_icon('settings') }}</a>
+                        {% endcall %}
+
+                        {% call render_tooltip('Remove link', placement='left', class='ml-3 py-2') %}
+                            <a href="#" class="text-secondary confirm"
+                               data-action="{{ link_delete_url }}"
+                               data-title="Confirm Delete Link">
+                                {{ render_icon('trash') }}</a>
+                        {% endcall %}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="p-5 text-center text-secondary empty">
+            No Links
+        </div>
+    {% endif %}
+{% endcall %}

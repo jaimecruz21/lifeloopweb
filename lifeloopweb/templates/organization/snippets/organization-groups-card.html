@@ -1,0 +1,19 @@
+{% from '_macros/global.html' import render_card, render_list_group %}
+
+{% set heading = 'Organization Groups' %}
+{% set empty = 'No groups' %}
+
+{% set actions %}
+    {% if current_user.is_authenticated and current_user.can_add_group(org.id) %}
+        <a href="{{ url_for('groups.new', org_id=org.id) }}" class="btn btn-primary btn-sm d-flex">
+            {{ render_icon('plus', class='mr-2') }}
+            Add group
+        </a>
+    {% endif %}
+{% endset %}
+
+{% call render_card(heading, class='mb-4 flex-1', body='scrollable', actions=actions) %}
+    {% call(group) render_list_group(org.groups, empty=empty, height=406) %}
+        {{ group.render_as_alternative_list_group_item(context={'org': org}) }}
+    {% endcall %}
+{% endcall %}

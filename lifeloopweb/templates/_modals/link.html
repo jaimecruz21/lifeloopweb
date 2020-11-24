@@ -1,0 +1,17 @@
+{% from '_macros/global.html' import render_field, render_modal %}
+
+{% call render_modal('Add Link', id='linkModal') %}
+    <form method="post" action="" id="linkForm" class="d-flex flex-column justify-content-between">
+        {{ form.csrf_token(id=False) }}
+
+        <div class="form-group">
+            {{ render_field(form.link_type) }}
+        </div>
+        <div class="form-group">
+            {{ render_field(form.link) }}
+        </div>
+        <div class="mb-3 mb-lg-0 text-right">
+            {{ render_field(form.submit, id='linkFormSubmit') }}
+        </div>
+    </form>
+{% endcall %}

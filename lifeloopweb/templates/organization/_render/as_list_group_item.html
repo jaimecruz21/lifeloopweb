@@ -1,0 +1,23 @@
+{% from '_macros/global.html' import render_icon, render_tooltip %}
+
+<a href="{{ url_for('orgs.show', org_id=organization.id) }}" class="d-flex align-items-center">
+    {{ organization.render_main_image() }}
+
+    <u>
+        {{ organization.name }}
+
+        {% if current_user.can_manage_subscription(organization.id) %}
+            ({{ organization.group_leaders|length}}) $$$
+        {% endif %}
+    </u>
+</a>
+
+{% if current_user.can_edit_org(organization.id) %}
+    <div class="btn-group d-lg-none align-self-center" role="group">
+        {% call render_tooltip('Edit organization', placement='left') %}
+            <a href="{{ url_for('orgs.edit', org_id=organization.id) }}" class="text-secondary">
+                {{ render_icon('settings') }}
+            </a>
+        {% endcall %}
+    </div>
+{% endif %}

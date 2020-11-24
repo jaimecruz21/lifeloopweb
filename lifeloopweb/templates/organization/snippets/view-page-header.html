@@ -1,0 +1,60 @@
+{% from '_macros/global.html' import render_tooltip %}
+{% from '_macros/other.html' import render_join_button %}
+
+<div class="page-header h-100">
+    <div class="mb-3 px-4 pt-4 d-flex justify-content-between align-items-start">
+        <h1 class="mb-0 flex-1">
+            {{ org.name }}
+        </h1>
+
+        {% if current_user.is_authenticated %}
+            <div class="d-flex align-items-center">
+                {% if current_user_can_edit_org %}
+                    {% call render_tooltip('Edit organization', class='ml-3 mr-auto d-inline-flex') %}
+                        <a href="{{ url_for('orgs.edit', org_id=org.id) }}">
+                            {{ render_icon('settings') }}
+                        </a>
+                    {% endcall %}
+                {% endif %}
+
+                {% if current_user_is_in_org %}
+                    {{ render_join_button() }}
+                {% else %}
+                    {{ render_join_button('Join Organization', confirm={
+                        'message': 'Confirm Request to Join Organization',
+                        'url': url_for('orgs.join_request', org_id=org.id)
+                    }) }}
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+    <div class="px-4">
+        {{ org.description|safe }}
+        <hr class="my-4">
+    </div>
+    <div class="p-4">
+        {% if org.images %}
+            <div class="scrollable pt-1 pr-3 image-gallery gallery-plain" style="max-height: 700px;">
+                <div class="card-columns" style="column-count: 2; orphans: 1; widows: 1;">
+                    {% for image in org.images %}
+                        <div class="mr-2 mb-2 ml-2">
+                            {% if image.url.endswith(video_extensions) %}
+                                <a href="#galleryModal" data-toggle="modal" class="image-gallery-video"
+                                   data-entitytype="{{ cloudinary['entity_type'] }}" data-imageid="{{ image.id }}">
+                                    <video>
+                                        <source src="{{ image.url }}">
+                                    </video>
+                                </a>
+                            {% else %}
+                                <a href="#galleryModal" data-toggle="modal"
+                                   data-entitytype="{{ cloudinary['entity_type'] }}" data-imageid="{{ image.id }}">
+                                    <img src="{{ image.url }}" class="img-fluid w-100">
+                                </a>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>

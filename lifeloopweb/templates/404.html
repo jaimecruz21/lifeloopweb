@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+{% block title %}404 Not Found{% endblock %}
+
+{% set body_class = 'd-flex justify-content-between flex-column' %}
+
+{% block body %}
+    <div class="container text-center my-auto align-items-center">
+        <div class="mb-5 pb-lg-5">
+            <h1 class="mb-4">
+                404
+            </h1>
+            <img src="{{ asset_url_for('images/group.org.default.png') }}" class="mb-5" alt="LifeLoop.Live logo">
+            <h2 class="mb-4">
+                Page not found
+            </h2>
+            <p>
+                Click
+                <a href="{{ url_for('index') }}">here</a>
+                to go to the homepage
+            </p>
+        </div>
+    </div>
+{% endblock %}

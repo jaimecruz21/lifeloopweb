@@ -1,0 +1,52 @@
+{% from '_macros/other.html' import render_social %}
+{% from '_macros/global.html' import render_field %}
+
+{# CONTEXT
+---------------------
+form - ContactForm #}
+
+<div class="p-3 p-sm-4 p-lg-5 ll-feedback mt-5 mt-lg-0">
+    <h3 class="mb-3">
+        Contact Us
+    </h3>
+
+    <form action="{{ url_for('contact') }}" method="post">
+        {{ form.csrf_token(id=False) }}
+
+        <div class="form-group mb-1">
+            {{ render_field(form.name, placeholder=False) }}
+        </div>
+
+        <div class="form-group mb-1">
+            {{ render_field(form.email, placeholder=False) }}
+        </div>
+
+        <div class="form-group mb-1">
+            {{ render_field(form.phone, placeholder=False) }}
+        </div>
+
+        <div class="form-group mb-4">
+            {{ render_field(form.message, rows=5, placeholder=False) }}
+        </div>
+
+        {% if recaptcha %}
+            <div class="form-group text-center d-flex justify-content-center">
+                {{ recaptcha }}
+            </div>
+        {% endif %}
+
+        <div class="text-center">
+            {{ render_field(form.submit, class='btn btn-lg btn-danger') }}
+        </div>
+    </form>
+</div>
+
+<div class="col-12 d-lg-none mt-5 text-center">
+    <h5 class="text-white mb-3">
+        We are in social:
+    </h5>
+
+    <div class="social-links">
+        {{ render_social() }}
+    </div>
+</div>

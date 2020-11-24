@@ -1,0 +1,23 @@
+server {
+        listen 80 default_server;
+        listen [::]:80 default_server ipv6only=on;
+
+        root /usr/share/nginx;
+        # index index.html index.htm;
+
+        server_name $hostname;
+        
+        location /static {
+                root /usr/share/nginx;
+
+                # First attempt to serve request as file, then
+                # as directory, then fall back to displaying a 404.
+                try_files $uri $uri/ /index.html;
+                # Uncomment to enable naxsi on this location
+                # include /etc/nginx/naxsi.rules
+        }
+        location / {
+            proxy_pass http://PROXY_HOST:5000/;
+        }
+}
+

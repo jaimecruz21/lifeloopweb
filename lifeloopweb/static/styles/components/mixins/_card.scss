@@ -1,0 +1,70 @@
+@import '../variables';
+
+@mixin card-featured-badges {
+    position: absolute;
+    margin-top: -25px;
+
+    @media (min-width: 992px) and (max-width: 1440px) {
+        .badge {
+            padding: 5px;
+        }
+    }
+
+    @media (max-width: 991px) {
+        padding-left: 20px;
+    }
+}
+
+@mixin card-featured() {
+    overflow: hidden;
+    transition: box-shadow .4s ease-out;
+    border-radius: 4px;
+    border: 0;
+    min-height: 429px;
+
+    .ll-organizations {
+        a {
+            font-size: 10px;
+            font-weight: 300;
+            color: #a6a6a7;
+
+            &:hover {
+                text-decoration: none;
+            }
+        }
+    }
+
+    .ll-description {
+        font-size: 12px;
+        font-weight: 300;
+        color: #5d5d5d;
+        line-height: 20px;
+    }
+
+    h4 {
+        font-size: 14px;
+        color: #3a466f;
+
+        a {
+            color: #313a43;
+            transition: color .2s ease-out;
+
+            &:hover {
+                color: $color-danger;
+                text-decoration: none;
+            }
+        }
+    }
+
+    @media (min-width: 992px) and (max-width: 1440px) {
+        margin-bottom: 30px;
+    }
+
+    @media (max-width: 768px) {
+        max-width: 350px;
+    }
+
+    @media (max-width: 480px) {
+        max-width: 100%;
+    }
+}

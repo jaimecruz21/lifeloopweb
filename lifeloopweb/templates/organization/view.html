@@ -1,0 +1,51 @@
+{% extends 'layout.html' %}
+{% from '_macros/other.html' import render_group %}
+{% from '_macros/global.html' import render_card, render_icon, render_tooltip %}
+
+{% block title %}Org - {{ org.name }}{% endblock %}
+{% set body_class = 'bg-profile d-flex flex-column justify-content-between' %}
+{% set footer_type = 'mt-auto' %}
+
+{% if current_user.is_authenticated %}
+    {% set current_user_can_add_group = current_user.can_add_group(org.id) %}
+    {% set current_user_can_edit_org = current_user.can_edit_org(org.id) %}
+    {% set current_user_is_in_org = current_user.is_in_org(org.id) %}
+{% endif %}
+
+{% block body %}
+    <div class="container pb-5">
+        <div class="row no-gutters">
+            <div class="col-12 col-lg-8 pr-lg-3 mt-4 mt-lg-5">
+                {% include 'organization/snippets/view-page-header.html' %}
+            </div>
+            <div class="col-12 col-lg-4 pl-lg-3 mt-4 mt-lg-5">
+                {% include 'organization/snippets/general-information.html' %}
+            </div>
+        </div>
+
+        {% include 'organization/snippets/all-groups.html' %}
+    </div>
+
+    <!-- MODALS -->
+    {% include '_modals/gallery.html' %}
+    {% if current_user.is_authenticated %}
+        {% if current_user_can_edit_org %}
+            {% with form=wtforms['mass_email'], action=url_for('orgs.email_org', org_id=org.id) %}
+                {% include '_modals/mass-email.html' %}
+            {% endwith %}
+        {% endif %}
+        {% with form=wtforms['confirm'] %}
+            {% include '_modals/confirm.html' %}
+        {% endwith %}
+    {% endif %}
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    {# {{ google_api_key }} #}
+    <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyDFF_SnWGTh2PxhWqgn82_TvjAS5LkIyQc"></script>
+    <script src="{{ asset_url_for('organization-view.js') }}"></script>
+    {% if current_user_can_edit_org %}
+        <script src="{{ asset_url_for('organization-view-sort-groups.js') }}"></script>
+    {% endif %}
+{% endblock %}

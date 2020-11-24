@@ -1,0 +1,10 @@
+%mh-mobile {
+    @media (max-width: 991px) {
+        max-height: initial !important;
+    }
+}
+
+.mh-699px {
+    @extend %mh-mobile;
+    max-height: 699px;
+}

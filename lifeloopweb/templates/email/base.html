@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,">
+    <title>LifeLoop.Live</title>
+
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300">
+
+    <!--[if mso]>
+    <style type="text/css">
+        body, span, table, td {
+            font-family: Tahoma, Verdana, sans-serif !important;
+        }
+    </style>
+    <![endif]-->
+</head>
+<body style="margin: 0; padding: 20px; background-color: #f7f7f7; text-align: center;">
+    <table style="min-width: 240px; max-width: 600px;" align="center" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td align="center" style="text-align: center;">
+                <a href="{{ index_url }}" style="text-decoration: none;">
+                    <img src="{{ header_image_url }}" alt="lifeloop"
+                         style="outline: 0; max-width: 280px; width: 100%; height: auto;">
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td align="right" style="text-align: right; padding: 10px 0;">
+                <table align="right" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td style="padding-right: 20px; font-family: 'Roboto', Tahoma, Verdana, sans-serif !important;">
+                            <a href="{{ faq_url }}" style="color: #636c72; font-size: 14px; text-decoration: none;">FAQ</a>
+                        </td>
+                        <td style="font-family: 'Roboto', Tahoma, Verdana, Segoe, sans-serif !important;">
+                            <a href="{{ contact_url }}" style="color: #636c72; font-size: 14px; text-decoration: none;">Contact</a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td bgcolor="#ffffff" align="center"
+                style="background-color: #ffffff; text-align: center; padding: 40px; color: #555555; font-size: 14px; border: 1px solid #dddddd;">
+
+                <span style="color: #283c66; font-weight: 600; font-family: Tahoma, Verdana, Segoe, sans-serif; font-size: 42px;">
+                    {% block title %}Thank you!{% endblock %}
+                </span>
+                <br><br><br>
+
+                <div style="font-family: 'Roboto', Tahoma, Verdana, sans-serif !important; line-height: 200% !important;">
+                    {% block content %}Something was going wrong{% endblock %}
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td align="center"
+                style="text-align: center; padding: 20px; font-family: 'Roboto', Tahoma, Verdana, sans-serif !important;">
+                <a href="{{ terms_url }}"
+                   style="color: #636c72; font-size: 14px;">Terms</a>
+                |
+                <a href="{{ privacy_url }}"
+                   style="color: #636c72; font-size: 14px;">Privacy</a>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" style="text-align: center; font-family: 'Roboto', Tahoma, Verdana, sans-serif !important;">
+                <span style="color: #636c72; font-size: 14px;">
+                    © 2017 LifeLoop.Live All rights reserved
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" style="text-align: center; padding: 20px;">
+                <table border="0" cellspacing="0" cellpadding="10" align="center">
+                    <tr>
+                        <td>
+                            <a href="https://www.facebook.com/LifeLoop.Live" title="Facebook" target="_blank"
+                               style="text-decoration: none; padding: 10px;">
+                                <img src="{{ facebook_image_url }}" alt="Facebook" width="24">
+                            </a>
+                        </td>
+                        <td>
+                            <a href="https://www.pinterest.com/lifelooplive/" title="Pinterest" target="_blank"
+                               style="text-decoration: none; padding: 10px;">
+                                <img src="{{ pinterest_image_url }}" alt="Pinterest" title="Pinterest" width="24">
+                            </a>
+                        </td>
+                        <td>
+                            <a href="https://twitter.com/LifeLoopLive" title="Twitter" target="_blank"
+                               style="text-decoration: none; padding: 10px;">
+                                <img src="{{ twitter_image_url }}" alt="Twitter" title="Twitter" width="24">
+                            </a>
+                        </td>
+                        <td>
+                            <a href="https://www.youtube.com/channel/UCv0StoLFlqIb8RW4g88kuTQ" title="YouTube"
+                               target="_blank"
+                               style="text-decoration: none; padding: 10px;">
+                                <img src="{{ youtube_image_url }}" alt="YouTube" title="YouTube" width="24">
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

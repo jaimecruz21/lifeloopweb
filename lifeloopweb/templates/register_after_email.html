@@ -1,0 +1,112 @@
+{% extends 'layout.html' %}
+{% from '_macros/global.html' import render_card, render_field, render_icon %}
+
+{% block title %}Register{% endblock %}
+
+{% set body_class = 'bg-profile d-flex justify-content-between flex-column' %}
+{% set newAccountSubheader %}
+    {{ render_icon('info', class='mt-2 mt-sm-0 mb-1 mb-sm-auto mr-3 mr-sm-2 float-left float-sm-none') }}
+    If you have any questions, please feel free to
+    <a href="{{ url_for('contact') }}" class="ml-0 ml-sm-2">
+        contact us
+    </a>
+{% endset %}
+
+{% block body %}
+    <div class="container pb-5 mb-auto">
+        <div class="page-header mt-4 mt-lg-5 mb-4 px-3 px-lg-4 d-flex align-items-center">
+            <h6 class="m-0">
+                Need to Register?
+            </h6>
+        </div>
+
+        {% call render_card('New Account', subheader=newAccountSubheader, body='p-3') %}
+            <form method="post" action="{{ form_url }}" id="registerForm">
+                {{ form.csrf_token(id=False) }}
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <p class="text-secondary">
+                            You must be {{ minyears }} or older to be a member of LifeLoop.Live.
+                        </p>
+                        <hr>
+                        <div class="form-group">
+                            {{ render_field(form.first_name) }}
+                        </div>
+                        <div class="form-group">
+                            {{ render_field(form.last_name) }}
+                        </div>
+                        <div class="form-group">
+                            <p class="text-secondary text-uppercase">Birthday</p>
+                            <div class="row">
+                                <div class="col-12 col-sm mb-3 mb-sm-0">
+                                    {{ render_field(form.month_of_birth) }}
+                                </div>
+                                <div class="col-12 col-sm mb-3 mb-sm-0">
+                                    {{ render_field(form.day_of_birth) }}
+                                </div>
+                                <div class="col-12 col-sm mb-3 mb-sm-0">
+                                    {{ render_field(form.year_of_birth) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            {{ render_field(form.email, readonly='readonly') }}
+                        </div>
+                        <div class="form-group">
+                            {{ render_field(form.phone_number, class='phone_us') }}
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            {{ render_field(form.city) }}
+                        </div>
+                        <div class="form-group">
+                            {{ render_field(form.timezone, class='timezonepicker') }}
+                        </div>
+                        {% include '_partials/password_requirements.html' %}
+                        <div class="form-group">
+                            {{ render_field(form.password, id='txtPassword') }}
+                        </div>
+                        <div class="form-group">
+                            {{ render_field(form.confirm, id='confirm') }}
+                        </div>
+                        <div class="form-group">
+                            {{ render_field(form.opt_in_texts) }}
+                        </div>
+                        <div class="form-group">
+                            {{ render_field(form.opt_in_emails) }}
+                        </div>
+                        <div class="form-group">
+                            {% call render_field(form.privacy_and_terms_agreement) %}
+                                Agree to
+                                <a href="{{ url_for('privacy') }}" target="_blank">
+                                    <u>Privacy</u>
+                                </a> and
+                                <a href="{{ url_for('terms') }}" target="_blank">
+                                    <u>Terms</u>
+                                </a>
+                            {% endcall %}
+                        </div>
+                    </div>
+                </div>
+                <div class="row align-items-end">
+                    <div class="col-12 col-sm-6 text-secondary text-center text-md-left mb-3 mb-sm-0">
+                        Already have an account?
+                        <a href="{{ url_for('login') }}" class="text-danger">
+                            Click here
+                        </a>
+                        to login.
+                    </div>
+                    <div class="col-12 col-sm-6 text-center text-sm-right">
+                        {{ render_field(form.submit, id='passwordSubmit') }}
+                    </div>
+                </div>
+            </form>
+        {% endcall %}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ asset_url_for('register-after-email.js') }}"></script>
+{% endblock %}

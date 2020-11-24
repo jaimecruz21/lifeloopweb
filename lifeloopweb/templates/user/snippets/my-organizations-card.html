@@ -1,0 +1,10 @@
+{% from '_macros/global.html' import render_card, render_list_group %}
+
+{% set heading = 'My Organizations' %}
+{% set empty = "You're not connected to any organizations at this time." %}
+
+{% call render_card(heading, class='mb-4 h-100', body='scrollable') %}
+    {% call(organization) render_list_group(user.organizations, empty=empty) %}
+        {{ organization.render_as_list_group_item() }}
+    {% endcall %}
+{% endcall %}

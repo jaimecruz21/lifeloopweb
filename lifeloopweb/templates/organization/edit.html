@@ -1,0 +1,116 @@
+{% extends 'layout.html' %}
+{% from '_macros/global.html' import render_icon %}
+
+{% block title %}Org - {{ org.name }}{% endblock %}
+
+{% set body_class = 'bg-profile d-flex flex-column justify-content-between' %}
+{% set footer_type = 'mt-auto' %}
+{% set is_payed_up = org.is_payed_up %}
+{% set current_user_is_org_creator = current_user.is_org_creator(org.id) %}
+
+{% set textMembersActions %}
+    <a href="#modalText" data-toggle="modal" class="btn btn-primary btn-sm mr-3 d-none d-sm-flex align-items-center">
+        {{ render_icon('text', class='mr-2') }}
+        Text Org Users
+    </a>
+    <a href="#modalMassEmail" data-toggle="modal" class="btn btn-primary btn-sm d-none d-sm-flex align-items-center">
+        {{ render_icon('mail', class='mr-2') }}
+        Email Org
+    </a>
+{% endset %}
+
+{% block body %}
+    <div class="container pb-5">
+        {% with is_payed_up=is_payed_up, textMembersActions=textMembersActions %}
+            {% include 'organization/snippets/edit-page-header.html' %}
+        {% endwith %}
+
+        {% if not is_payed_up and not current_user.super_admin %}
+            <div class="alert alert-danger p-5 text-center" role="alert">
+                <h4 class="alert-heading">IMPORTANT</h4>
+                <p>
+                    {% if current_user_is_org_creator %}
+                      You must first update your billing information!</br>
+                      Please click <a href="{{ url_for('orgs.billing', org_id=org.id) }}">here</a> to update billing information.
+                    {% else %}
+                        To update your billing information, please contact
+                        {{ org.creator }}
+                    {% endif %}
+                </p>
+            </div>
+
+            {% if current_user.organizations_created() %}
+                {% if current_user == creator %}
+                    {% include 'organization/snippets/licenses.html' %}
+                {% endif %}
+            {% endif %}
+        {% else %}
+            <div class="d-block d-sm-none my-3">
+                <a href="#modalText" data-toggle="modal" class="btn btn-primary btn-sm d-flex align-items-center mb-3">
+                    {{ render_icon('text', class='mr-2') }}
+                    Text Org Users
+                </a>
+                <a href="#modalMassEmail" data-toggle="modal" class="btn btn-primary btn-sm d-flex align-items-center">
+                    {{ render_icon('mail', class='mr-2') }}
+                    Email Org
+                </a>
+            </div>
+
+            {% include 'organization/snippets/analytics.html' %}
+
+            <div class="mb-4">
+                {% with members=members, creator=creator, role_forms=wtforms['role_forms_dict'],
+                        extra_btns=[textMembersActions] %}
+                    {% include '_partials/members-card.html' %}
+                {% endwith %}
+            </div>
+            <div class="row no-gutters">
+                <div class="col-12 col-lg-8 mb-4 mb-lg-0 pr-lg-2 d-flex flex-column justify-content-between">
+                    {% with form=wtforms['org'] %}
+                        {% include 'organization/snippets/basic-information-card.html' %}
+                    {% endwith %}
+
+                    {% with heading='Organization Links', form=wtforms['link'], links=org.links, url_patterns={
+                        'create': url_for('links.create_for_org', organization_id=org.id),
+                        'update': url_for('links.update_for_org', organization_id=org.id, link_id='{}'),
+                        'delete': url_for('links.delete_for_org', organization_id=org.id, link_id='{}')
+                    } %}
+                        {% include '_partials/links-card.html' %}
+                    {% endwith %}
+                </div>
+                <div class="col-12 col-lg-4 mb-4 mb-lg-0 pl-lg-2 d-flex flex-column justify-content-between">
+                    {% include 'organization/snippets/organization-groups-card.html' %}
+
+                    {% with heading='Organization Media', entity=org %}
+                        {% include '_partials/media-card.html' %}
+                    {% endwith %}
+                </div>
+            </div>
+
+            {% include 'organization/snippets/licenses.html' %}
+
+            <!-- MODALS -->
+            {% include '_modals/gallery.html' %}
+            {% with form=wtforms['confirm'] %}
+                {% include '_modals/confirm.html' %}
+            {% endwith %}
+            {% with form=wtforms['link'] %}
+                {% include '_modals/link.html' %}
+            {% endwith %}
+            {% with form=wtforms['add_member'], return_url=add_member_return_url %}
+                {% include '_modals/add_member.html' %}
+            {% endwith %}
+            {% with form=wtforms['mass_email'], action=url_for('orgs.email_org', org_id=org.id) %}
+                {% include '_modals/mass-email.html' %}
+            {% endwith %}
+            {% with form=wtforms['text_message'], title='Text Organization Users' %}
+                {% include '_modals/text-members.html' %}
+            {% endwith %}
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ asset_url_for('organization-edit.js') }}"></script>
+{% endblock %}

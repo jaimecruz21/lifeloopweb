@@ -1,0 +1,43 @@
+.icon {
+  display: flex;
+  align-items: center;
+
+  .btn-primary &,
+  .btn-info & {
+    svg {
+      fill: #ffffff !important;
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  &.icon-plus svg {
+    .btn-primary &,
+    .btn-info & {
+      width: 8px;
+      height: 8px;
+    }
+  }
+
+  .dropdown-menu & {
+    &.icon-plus {
+      svg {
+        width: 12px !important;
+        height: 12px !important;
+      }
+    }
+  }
+
+  .search-close & {
+    &.icon-plus {
+      transform: rotate(45deg);
+      fill: #6f737e;
+    }
+  }
+
+  .toggler & {
+    svg {
+      fill: #314471 !important;
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Request{% endblock %}
+
+{% block content %}
+    <p>
+        Someone has filled out a contact form on <a href="{{ index_url }}">LifeLoop.Live</a>
+    </p>
+
+    <p>
+        Name:
+        {{ name }}
+    </p>
+
+    <p>
+        From:
+        {{ email }}
+    </p>
+
+    <p>
+        Phone:
+        {{ phone }}
+    </p>
+
+    <p>
+        Message:<br>
+        {{ message }}
+    </p>
+{% endblock %}

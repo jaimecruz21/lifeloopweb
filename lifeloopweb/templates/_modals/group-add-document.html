@@ -1,0 +1,22 @@
+{% from '_macros/global.html' import render_field, render_modal %}
+
+{% call render_modal('Add a Group Document', id='modalAddDocument') %}
+    {% with form=google_form, client_id=google_api['client_id'], key=google_api['key'] %}
+        {% include '_partials/google_drive.html' %}
+    {% endwith %}
+
+    <form method="post" action="{{ url_for('groups.document_add', group_id=group.id) }}"
+          enctype="multipart/form-data" id="groupAddDocumentForm">
+        {{ form.csrf_token(id=False) }}
+
+        <div class="form-group">
+            {{ render_field(form.filename) }}
+        </div>
+        <div class="form-group">
+            {{ render_field(form.file) }}
+        </div>
+        <div class="text-center text-lg-right">
+            {{ render_field(form.submit, class='btn btn-primary', id='btnGroupAddDocument') }}
+        </div>
+    </form>
+{% endcall %}

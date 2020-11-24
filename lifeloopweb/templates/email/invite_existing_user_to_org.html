@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import render_button %}
+
+{% block title %}
+    {% if reminder %}
+        Invitation Reminder!
+    {% else %}
+        Organization Invitation
+    {% endif %}
+{% endblock %}
+{% block content %}
+    <h3>
+    {% if reminder %}
+        {{ org.name }} has sent you a reminder!
+    {% else %}
+        A LifeLoop user has invited you to join an organization!
+    {% endif %}   
+    </h3>
+    <p>
+        You're getting this email because an adminstrator of 
+        <strong>{{ org.name }}</strong>
+        wants you to be a member of their organization!
+    </p>
+    <p>
+        As an existing <a href="{{ index_url }}">LifeLoop.Live</a> member, you simply need to click the link below to login and accept the organization invitation.
+    </p>
+    {{ render_button(login_url, 'Login') }}
+   <p>
+        <i>If you believe this type of notification from {{ email }} is spam, click "Info" in the notification and then click "Block Future Notifications". <br>
+        <b>(Caution: This cannot be undone!)</b></i>
+    </p>
+    <p>
+        If you need any further assistance, please email us at <a href="mailto:support@lifeloop.live">support@lifeloop.live</a>, thanks!
+    </p>
+{% endblock %}

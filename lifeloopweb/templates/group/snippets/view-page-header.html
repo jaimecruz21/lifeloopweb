@@ -1,0 +1,136 @@
+{% from '_macros/global.html' import render_tooltip, render_icon %}
+
+{% set parent_org = group.parent_org %}
+{% set group_organizations = group.organizations %}
+{% set group_organizations_length = group_organizations|length %}
+{% set gender_focus_formatted = group.gender_focus_formatted %}
+
+<div class="page-header h-100 mb-2 p-4 border-radius-4 mb-4">
+    <h5 class="mb-3 d-flex justify-content-between">
+        <div>
+            {{ group.name }}
+
+            <span class="text-grey">|</span>
+            <a href="{{ url_for('orgs.show', org_id=parent_org.id) }}">
+                {{ parent_org.name }}
+            </a>
+        </div>
+
+        {% if current_user.is_authenticated %}
+            <div class="d-flex">
+                {% if current_user_can_edit_group %}
+                    {% call render_tooltip('Edit group') %}
+                        <a class="text-secondary" href="{{ url_for('groups.edit', group_id=group.id) }}">
+                            {{ render_icon('settings') }}
+                        </a>
+                    {% endcall %}
+                {% endif %}
+
+                {% if current_user.is_group_member(group.id) %}
+                    {% call render_tooltip('Leave group', class='ml-3') %}
+                        <a href="#" class="text-secondary confirm"
+                           data-action="{{ url_for('users.group_leave', user_id=current_user.id, group_id=group.id) }}"
+                           data-title="Confirm Leave Group">
+                            {{ render_icon('leave-cross') }}
+                        </a>
+                    {% endcall %}
+                {% endif %}
+            </div>
+        {% endif %}
+    </h5>
+
+    {% if group_organizations_length > 1 %}
+        <div class="mb-3">
+            {% for organization in group_organizations %}
+                {% if organization.id != parent_org.id %}
+                    <a class="text-danger" href="{{ url_for('orgs.show', org_id=organization.id) }}">
+                        {{ organization.name }}
+                    </a>
+
+                    {% if not loop.first and not loop.last %}
+                        <span class="text-grey mx-1">|</span>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="mb-3">
+        {% if gender_focus_formatted %}
+            <span class="badge badge-primary mb-1">
+                {{ gender_focus_formatted }}
+            </span>
+        {% endif %}
+
+        {% if group.age_range.description %}
+            <span class="badge badge-warning mb-1">
+                {{ group.age_range.description }}
+            </span>
+        {% endif %}
+
+        {% for meet_time in group.get_meet_times %}
+            <span class="badge badge-danger mb-1">
+                {{ meet_time }}
+            </span>
+        {% endfor %}
+    </div>
+
+    <p>{{ group.description|safe }}</p>
+
+    {% if group.links %}
+        <div class="my-3">
+            <div class="text-secondary mb-2">
+                Group links
+            </div>
+            <div class="d-flex">
+                {% for link in group.links %}
+                    {% call render_tooltip(link.link_type.description, class='mr-3') %}
+                        <a href="{{ link.url }}" target="_blank">
+                            {{ render_icon(link.link_type.icon) }}
+                        </a>
+                    {% endcall %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <hr class="mb-4">
+
+    {% if group.images %}
+        <div class="scrollable pt-1 pr-3 image-gallery gallery-thumbnail" style="max-height: 700px;">
+            <div class="card-columns" style="column-count: 2; orphans: 1; widows: 1;">
+                {% for image in group.images %}
+                    <div class="mr-2 py-1 mb-2 ml-2"
+                         style="-webkit-column-break-inside: avoid; page-break-inside: avoid; break-inside: avoid;">
+                        {% if image.url.endswith(video_extensions) %}
+                            <a href="#galleryModal" class="gallery-video position-relative"
+                               data-toggle="modal" data-entitytype="{{ entity_type }}" data-imageid="{{ image.id }}">
+                                <video class="cld-video-player cld-video-player-skin-light cld-fluid"
+                                       data-cld-public-id="{{ image.public_id }}">
+                                </video>
+                            </a>
+                        {% else %}
+                            <a href="#galleryModal" data-toggle="modal"
+                               data-entitytype="{{ entity_type }}" data-imageid="{{ image.id }}">
+                                <img src="{{ image.url }}" class="img-fluid w-100">
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if current_user.is_authenticated %}
+        {% if current_user_can_view_group_items %}
+            <div id="disqus_thread_desktop" class="d-none d-lg-block mt-5" data-page='{{ disqus_config['page']|tojson }}' data-sso='{{ disqus_config['sso']|tojson }}'></div>
+            <noscript>Please enable JavaScript to view the comments</noscript>
+        {% endif %}
+    {% else %}
+        <p class="mt-5">
+            Please
+            <a href="{{ url_for('login') }}">login</a>
+            to view the comments
+        </p>
+    {% endif %}
+</div>

@@ -1,0 +1,9 @@
+{% from '_macros/global.html' import render_field, render_modal %}
+
+{% call render_modal('', size='xs', class='text-center', id='confirmModal', title_id='confirmTitle') %}
+    <p id="confirmMessage"></p>
+    <form method="POST" action="#" id="confirmForm">
+        {{ form.csrf_token }}
+        {{ render_field(form.confirm) }}
+    </form>
+{% endcall %}

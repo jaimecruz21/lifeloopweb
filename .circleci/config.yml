@@ -1,0 +1,190 @@
+defaults: &defaults
+    working_directory: ~/code
+    docker:
+      - image: circleci/python:3.6.4
+
+version: 2
+jobs:
+  build-app:
+    <<: *defaults
+    steps:
+      - checkout
+
+      - run:
+          name: Install Dependencies
+          command: |
+            sudo apt-get install apt-transport-https
+
+      - run:
+          name: Update nodesource
+          command: |
+            curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+
+      - run:
+          name: Install Yarn
+          command: |
+            curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+            echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+            sudo apt-get update && sudo apt-get install yarn
+
+      - run:
+          name: Build Yarn
+          command: |
+            yarn build_dev
+
+  test:
+    <<: *defaults
+    steps:
+      - checkout
+
+      - run:
+          name: Build virtual env
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install --upgrade pip==9.0.3
+            pip install tox
+            tox
+
+      - store_test_results:
+          path: test-reports
+
+  build-images:
+    <<: *defaults
+    steps:
+      - checkout
+
+      - setup_remote_docker:
+          docker_layer_caching: true
+
+      - run:
+          name: Install Docker client
+          command: |
+            set -x
+            VER="17.12.1-ce"
+            curl -L -o /tmp/docker-$VER.tgz https://download.docker.com/linux/static/stable/x86_64/docker-$VER.tgz
+            tar -xz -C /tmp -f /tmp/docker-$VER.tgz
+            sudo mv -fv /tmp/docker/* /usr/bin
+
+      - run: mkdir -p workspace
+
+      - run: |
+          TAG=3.0.$CIRCLE_BUILD_NUM.$CIRCLE_SHA1
+          echo "$TAG" >> workspace/version
+          make build_prod
+          docker tag lifeloopweb_prod:latest toneo/lifeloopweb_prod:$TAG
+          docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+          docker push toneo/lifeloopweb_prod:$TAG
+          docker rmi toneo/lifeloopweb_prod:$TAG
+          docker rmi lifeloopweb_prod
+          docker rmi lifeloopweb
+
+      - persist_to_workspace:
+          root: workspace
+          paths:
+            - version
+
+  deploy_staging:
+    <<: *defaults
+    steps:
+      - checkout
+
+      - add_ssh_keys:
+          fingerprints:
+            - "39:02:20:3e:e8:a3:12:8d:d9:ed:93:61:53:a7:cd:a5"
+
+      - run:
+          name: Create Ansible vault password file
+          command: echo $STAGING_VAULT_PASSWORD > ansible_vault_password.txt
+
+      - run:
+          name: Install Ansible
+          command: |
+            sudo sh -c 'echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main" >> /etc/apt/sources.list'
+            sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
+            sudo apt-get update
+            sudo apt-get install -y ansible
+            echo ansible --version
+
+      - attach_workspace:
+          at: ~/code/workspace
+
+      - run:
+          name: Deploy
+          command: |
+            cp .env.template .env
+            VERSION=$(cat ~/code/workspace/version)
+            make TAG=$VERSION deploy_staging
+
+      - run:
+          name: Tag version
+          command: |
+            VERSION=$(cat ~/code/workspace/version)
+            git tag $VERSION HEAD
+            git push origin --tags
+
+  deploy_production:
+    <<: *defaults
+    steps:
+      - checkout
+
+      - add_ssh_keys:
+          fingerprints:
+            - "39:02:20:3e:e8:a3:12:8d:d9:ed:93:61:53:a7:cd:a5"
+
+      - run:
+          name: Create Ansible vault password file
+          command: echo $PRODUCTION_VAULT_PASSWORD > ansible_vault_password.txt
+
+      - run:
+          name: Install Ansible
+          command: |
+            sudo sh -c 'echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main" >> /etc/apt/sources.list'
+            sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
+            sudo apt-get update
+            sudo apt-get install -y ansible
+            echo ansible --version
+
+      - attach_workspace:
+          at: ~/code/workspace
+
+      - run:
+          name: Deploy
+          command: |
+            cp .env.template .env
+            VERSION=$(git describe --abbrev=0 --tags)
+            make TAG=$VERSION deploy_production
+
+workflows:
+  version: 2
+  pr-build:
+    jobs:
+      - build-app:
+          filters:
+            branches:
+              ignore: production
+      - test:
+          requires:
+            - build-app
+          filters:
+            branches:
+              ignore: production
+      - build-images:
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
+      - deploy_staging:
+          requires:
+            - build-images
+          filters:
+            branches:
+              only: master
+  production:
+    jobs:
+      - deploy_production:
+          filters:
+            branches:
+              only: production

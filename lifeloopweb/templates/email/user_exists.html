@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import render_button %}
+
+{% block title %}Was this you?{% endblock %}
+
+{% block content %}
+    <p>
+        You've received this email because someone has attempted to create a new account using your email address.
+    </p>
+    <p>
+        Please click the link below if you'd like to reset your password. If you did not request this, please ignore
+        this email.
+    </p>
+    {{ render_button(forgot_password_url, 'Click here to reset your password!') }}
+    <p>
+        If you have any issues completing the registration process we would be happy to help you. You can contact us at
+        <a href="mailto:support@lifeloop.live">Support@LifeLoop.Live</a>
+    </p>
+{% endblock %}

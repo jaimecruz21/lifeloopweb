@@ -1,0 +1,109 @@
+@import 'variables';
+
+.btn {
+    padding: 6px 10px;
+    font-size: 12px;
+    text-transform: uppercase;
+
+    &.btn-primary {
+        background-color: $bg-elem-color;
+        border: 0;
+        color: #ffffff;
+
+        &:hover,
+        &:focus,
+        &:active {
+            background: $bg-elem-color linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(49, 68, 113, .64) 100%) !important;
+            box-shadow: 0 2px 3px rgba(0, 0, 0, .1) !important;
+        }
+    }
+
+    &.btn-danger {
+        background-color: #ff2460;
+        border: 0;
+        color: #ffffff;
+
+        &:hover,
+        &:focus,
+        &:active {
+            background: #ff2460 linear-gradient(rgba(0, 0, 0, 0) 0%, #d20c42 100%) !important;
+            box-shadow: 0 2px 3px rgba(0, 0, 0, .1) !important;
+        }
+    }
+
+    &.btn-secondary {
+        background-color: #e4e4e4;
+        border: 0;
+        color: #5d5d5d;
+
+        &:hover,
+        &:focus,
+        &:active {
+            background-color: #dddddd !important;
+            box-shadow: 0 2px 3px rgba(0, 0, 0, .1) !important;
+            color: #000000 !important;
+        }
+    }
+
+    &.btn-info {
+        color: #ffffff;
+
+        &:hover,
+        &:focus,
+        &:active {
+            box-shadow: 0 2px 3px rgba(0, 0, 0, .1) !important;
+        }
+    }
+
+    &.btn-sm {
+        font-size: 10px !important;
+    }
+
+    &:hover,
+    &:focus,
+    &:active {
+        cursor: pointer !important;
+    }
+
+    &.btn-lg {
+        padding: 12px 60px !important;
+        font-size: 14px !important;
+    }
+
+    .card-header &,
+    .page-header & {
+        min-width: auto;
+        padding: 5px 10px;
+    }
+
+    &.btn-rounded {
+        border-radius: 20px;
+        min-width: 0;
+        font-size: 10px;
+        padding: 5px 15px;
+        text-transform: initial;
+        height: 25px;
+    }
+
+    &.btn-outline-primary {
+        color: $color-primary;
+        border-color: $color-primary;
+
+        &:hover,
+        &:focus,
+        &:active {
+            color: #ffffff !important;
+        }
+    }
+
+    &.btn-outline-danger {
+        color: $color-danger;
+        border-color: $color-danger;
+
+        &:hover,
+        &:focus,
+        &:active {
+            color: #ffffff !important;
+        }
+    }
+}

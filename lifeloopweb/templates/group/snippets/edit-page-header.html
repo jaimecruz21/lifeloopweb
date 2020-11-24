@@ -1,0 +1,35 @@
+{% from '_macros/global.html' import render_icon %}
+
+<div class="page-header mt-4 mt-lg-5 mb-4 p-3 px-lg-4 d-flex align-items-center justify-content-between">
+    <h6 class="m-0 mr-4">
+        Group Administration page
+
+        <span class="mx-2 text-secondary d-none d-lg-inline">|</span>
+        <span class="text-danger d-block d-lg-inline">
+            <a href="{{ url_for('groups.show', group_id=group.id) }}">
+                {{ group.name }}
+            </a>
+        </span>
+    </h6>
+
+    {% if is_payed_up %}
+        <div class="d-flex">
+            <a href="#modalText" class="btn btn-primary btn-sm d-flex align-items-center" data-toggle="modal"
+               id="btnOpenTextModal">
+                {{ render_icon('text', class='mr-0 mr-md-2') }}
+
+                <span class="d-none d-md-inline">
+                    Text Group Users
+                </span>
+            </a>
+            <a href="#modalMassEmail" class="btn btn-primary btn-sm d-flex align-items-center ml-2" data-toggle="modal"
+               id="btnEmailGroup">
+                {{ render_icon('mail', class='mr-0 mr-md-2') }}
+
+                <span class="d-none d-md-inline">
+                    Email Group
+                </span>
+            </a>
+        </div>
+    {% endif %}
+</div>

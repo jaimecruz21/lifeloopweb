@@ -1,0 +1,9 @@
+{% from '_macros/global.html' import render_card %}
+
+{% set actions %}
+    {% include '_partials/image_add_button.html' %}
+{% endset %}
+
+{% call render_card('Profile image', class='h-100', actions=actions) %}
+    {{ user.render_media() }}
+{% endcall %}

@@ -1,0 +1,35 @@
+{% from '_macros/global.html' import render_icon %}
+
+<input type="hidden" id="entity_type" value="{{ cloudinary['entity_type'] }}">
+<input type="hidden" id="entity_id" value="{{ cloudinary['entity_id'] }}">
+<input type="hidden" id="env" value="{{ cloudinary['env'] }}">
+<input type="hidden" id="cloudinary_api_key" value="{{ cloudinary['cloudinary_api_key'] }}">
+<input type="hidden" id="cloudinary_cloud_name" value="{{ cloudinary['cloudinary_cloud_name'] }}">
+<input type="hidden" id="cloudinary_upload_preset" value="{{ cloudinary['cloudinary_upload_preset'] }}">
+
+<div class="modal fade" id="galleryModal" tabindex="-1" role="dialog" aria-labelledby="galleryModal"
+     aria-hidden="true">
+    <a class="close confirm modal-btn d-flex justify-content-center align-items-center gallery-remove delete-image"
+       data-action=""
+       data-title="Confirm Delete Image">
+        {{ render_icon('trash') }}
+    </a>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body text-center pt-0">
+
+            </div>
+            <div class="modal-footer">
+                <a class="close modal-btn d-flex justify-content-center align-items-center gallery-prev">
+                    {{ render_icon('left') }}
+                </a>
+                <a class="close modal-btn" data-dismiss="modal">
+                    ×
+                </a>
+                <a class="close modal-btn d-flex justify-content-center align-items-center gallery-next">
+                    {{ render_icon('right') }}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

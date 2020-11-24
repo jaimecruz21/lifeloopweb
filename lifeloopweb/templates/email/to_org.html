@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ org.name }}{% endblock %}
+
+{% block content %}
+    <p>
+        {{ message }}
+    </p>
+    <p>
+        This message was sent by:
+        {{ user.full_name_and_email }}
+        <strong>
+            {{ org.name }}
+        </strong>
+    </p>
+    <p>
+        If you need any further assistance, please email us at <a href="mailto:support@lifeloop.live">support@lifeloop.live</a>, thanks!
+    </p>    
+{% endblock %}

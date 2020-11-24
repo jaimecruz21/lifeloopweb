@@ -1,0 +1,5 @@
+FROM nginx
+WORKDIR /nginx
+COPY nginx_conf/entrypoint.sh /nginx
+COPY nginx_conf/* /etc/nginx/
+CMD ["/nginx/entrypoint.sh"]

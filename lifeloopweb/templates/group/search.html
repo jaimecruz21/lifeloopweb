@@ -1,0 +1,87 @@
+{% extends 'layout.html' %}
+{% from '_macros/global.html' import render_field %}
+
+{% block title %}Group Search{% endblock %}
+
+{% block body %}
+    <div class="container pb-5">
+        <div class="row no-gutters">
+            <div class="col-12 col-lg-4 mb-4 mb-lg-0">
+                <h5>Advanced Group Search</h5>
+
+                <form method="post" action="{{ url_for('groups.search') }}" id="groupSearchForm">
+                    {{ form.csrf_token(id=False) }}
+
+                    <div class="form-group">
+                        {{ render_field(form.name) }}
+                    </div>
+                    <div class="form-group">
+                        {{ render_field(form.city) }}
+                    </div>
+                    <div class="form-group">
+                        {{ render_field(form.state) }}
+                    </div>
+                    <div class="form-group">
+                        {{ render_field(form.zip_code) }}
+                    </div>
+                    <div class="form-group">
+                        {{ render_field(form.group_category) }}
+                    </div>
+                    <div class="form-group">
+                        {{ render_field(form.gender_focus) }}
+                    </div>
+                    <div class="form-group">
+                        {{ render_feild(form.age_range) }}
+                    </div>
+                    <div class="text-center">
+                        {{ render_field(form.submit) }}
+                    </div>
+                </form>
+            </div>
+            <div class="col-12 col-lg-8">
+                <h5>Results ({{ groups|length }})</h5>
+
+                {% if not groups %}
+                    <p>No results found for this search.</p>
+                {% else %}
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Gender Focus</th>
+                                <th>Age Range</th>
+                                <th>Group Category</th>
+                                <th>Organization Name</th>
+                                <th>Organization Address</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for group in groups %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('groups.show', group_id=group.id) }}">{{ group.name }}</a>
+                                    </td>
+                                    <td>
+                                        {{ group.gender_focus_formatted }}
+                                    </td>
+                                    <td>
+                                        {{ group.age_range.description }}
+                                    </td>
+                                    <td>
+                                        {{ group.group_type.description }}
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('orgs.show', org_id=group.parent_org.id) }}">{{ group.parent_org.name }}</a>
+                                    </td>
+                                    <td>
+                                        {{ group.parent_org.address.formatted }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

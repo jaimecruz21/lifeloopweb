@@ -1,0 +1,28 @@
+{% from '_macros/global.html' import render_field, render_icon %}
+
+<button id="picker-button" type="button" class="btn btn-primary btn-xs d-flex mb-3"
+    data-client-id="{{ client_id }}" data-api-key="{{ key }}">
+	{{ render_icon('google', class='mr-2') }}
+    <var id="picker-text">
+        Link to Google Document
+    </var>
+</button>
+
+<form action="{{ url_for('groups.document_add', group_id=group.id) }}" method="post"
+      enctype="multipart/form-data" id="groupAddGoogleDocForm" hidden>
+	{{ form.csrf_token(id=False) }}
+    <div class="form-group">
+	    {{ render_field(form.filename) }}
+	</div>	
+    <div class="form-group">
+	    {{ render_field(form.link) }}
+	</div>
+    <div class="text-center p-3">
+	    {{ render_field(form.submit, id='btnGroupAddGoogleDoc') }}
+	</div>
+</form>
+
+<script type="text/javascript" src="//apis.google.com/js/api.js?onload=onApiLoad"></script>
+<script src="//www.google.com/jsapi?key={{ google_api_key }}"></script>
+<script src="//apis.google.com/js/client.js?onload=initPicker"></script>
+<script src="//apis.google.com/js/api.js"></script>

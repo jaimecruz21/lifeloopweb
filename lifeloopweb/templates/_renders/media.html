@@ -1,0 +1,22 @@
+{% if images %}
+    <div class="row no-gutters p-3 image-gallery gallery-icon" id="gallery-items">
+        {% for image in images %}
+            <div class="col-4 col-lg-3 p-2">
+                {% if image.url.endswith(video_extensions) %}
+                    <a href="#galleryModal" data-toggle="modal" class="position-relative gallery-video"
+                       data-entitytype="{{ entity_type }}" data-imageid="{{ image.id }}">
+                        <video class="cld-video-player cld-video-player-skin-light cld-fluid" data-cld-public-id="{{ image.public_id }}">
+                        </video>
+                    </a>
+                {% else %}
+                    <a href="#galleryModal" data-toggle="modal" style="background-image: url('{{ image.url }}');"
+                       data-entitytype="{{ entity_type }}" data-imageid="{{ image.id }}"></a>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="p-5 text-center text-secondary empty">
+        No Media
+    </div>
+{% endif %}

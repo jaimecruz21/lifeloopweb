@@ -1,0 +1,54 @@
+{% from '_macros/global.html' import render_card, render_field %}
+
+{% call render_card('Billing information', class='h-100', body='p-3 d-flex flex-column justify-content-between') %}
+    <form action="{{ url_for('orgs.billing', org_id=org.id) }}" method="POST" id="billingInformationForm">
+        {{ form.csrf_token(id=False) }}
+        <div class="form-group">
+            {{ render_field(form.full_number) }}
+        </div>
+        <div class="row no-gutters">
+            <div class="col pr-3 form-group">
+                {{ render_field(form.expiration_month) }}
+            </div>
+            <div class="col form-group">
+                {{ render_field(form.expiration_year) }}
+            </div>
+        </div>
+        <div class="row no-gutters">
+            <div class="col pr-3 form-group">
+                {{ render_field(form.billing_country) }}
+            </div>
+            <div class="col form-group">
+                {{ render_field(form.billing_city) }}
+            </div>
+        </div>
+        <div class="row no-gutters">
+            <div class="col pr-3 form-group">
+                {{ render_field(form.billing_state) }}
+            </div>
+            <div class="col form-group">
+                {{ render_field(form.billing_zip) }}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ render_field(form.billing_address) }}
+        </div>
+        <div class="form-group">
+            {{ render_field(form.coupon_code) }}
+        </div>
+
+        {% call render_field(form.privacy_and_terms_agreement) %}
+            Agree to
+            <a href="{{ url_for('privacy') }}" target="_blank">
+                Privacy
+            </a>
+            and
+            <a href="{{ url_for('terms') }}" target="_blank">
+                Terms
+            </a>
+        {% endcall %}
+    </form>
+    <div class="text-right">
+        {{ render_field(form.submit, form='billingInformationForm') }}
+    </div>
+{% endcall %}

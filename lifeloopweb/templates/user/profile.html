@@ -1,0 +1,64 @@
+{% extends 'layout.html' %}
+
+{% block title %}User{% endblock %}
+{% set body_class = 'bg-profile' %}
+
+{% block body %}
+    <div class="container pb-5">
+        <div class="page-header mt-4 mt-lg-5 mb-4 px-3 px-lg-4 d-flex align-items-center">
+            <h6 class="m-0">
+                My Profile
+            </h6>
+        </div>
+        <div class="row no-gutters mh-699px">
+            <div class="col-12 col-lg-4 d-flex order-2 order-lg-1 mb-4 mb-lg-0">
+                {% include 'user/snippets/my-groups-card.html' %}
+            </div>
+            <div class="col-12 col-lg-4 d-flex flex-column order-1 order-lg-2 px-lg-4">
+                {% include 'user/snippets/my-organizations-card.html' %}
+
+                <div class="d-none d-lg-block">
+                    {% with cloudinary=cloudinary %}
+                        {% include 'user/snippets/profile-image-card.html' %}
+                    {% endwith %}
+                </div>
+            </div>
+            <div class="col-12 d-lg-none order-3 mb-4">
+                {% with cloudinary=cloudinary %}
+                    {% include 'user/snippets/profile-image-card.html' %}
+                {% endwith %}
+            </div>
+            <div class="col-12 col-lg-4 order-4 order-lg-3 mb-4 mb-lg-0" id="user-notifications">
+                {% include 'user/snippets/notifications-card.html' %}
+            </div>
+        </div>
+        <div class="page-header px-3 px-lg-4 mt-0 mb-4 mt-lg-4 d-flex flex-row justify-content-between align-items-center">
+            <h6 class="m-0">
+                Account settings
+            </h6>
+        </div>
+        <div class="row no-gutters">
+            <div class="col-12 col-lg-8 mb-4 mb-lg-0 pr-lg-4">
+                {% with form=wtforms['user_profile'], form_id='user_profile_form' %}
+                    {% include 'user/snippets/my-profile-information-card.html' %}
+                {% endwith %}
+            </div>
+            <div class="col-12 col-lg-4 mb-4 mb-lg-0">
+                {% with form=wtforms['password_reset'], form_id='password_reset_form' %}
+                    {% include 'user/snippets/change-your-password-card.html' %}
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALS -->
+    {% with form=wtforms['confirm'] %}
+        {% include '_modals/confirm.html' %}
+    {% endwith %}
+    {% include '_modals/gallery.html' %}
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ asset_url_for('user.js') }}"></script>
+{% endblock %}

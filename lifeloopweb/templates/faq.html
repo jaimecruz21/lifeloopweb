@@ -1,0 +1,198 @@
+{% extends 'layout.html' %}
+{% block title %}FAQ{% endblock %}
+
+{# USED in header.html, footer.html, layout.html #}
+{% set navbar_type = 'desktop-transparent position-absolute w-100' %}
+
+{% block body %}
+    <section class="background bg-faq d-flex align-items-center">
+        <h1 class="text-center mx-auto">FAQ</h1>
+    </section>
+    <div class="container-fluid">
+        <div class="row justify-content-center px-3 py-5 px-lg-5 text-center text-lg-left border border-bottom-1">
+            <div class="col-12 col-lg-3 ml-auto mb-4 mb-lg-0">
+                How can LifeLoop.Live help my organization?
+            </div>
+            <div class="col-12 col-lg-6 mx-auto font-light text-grey">
+                LifeLoop.Live helps churches, ministries and Christian nonprofits digitally express their mission in
+                Christ. The platform offers organizations an easy way to bring their members online, with features such
+                as face-to-face group video, text-to-group messaging, social media integration, and screen-sharing of
+                the Word and other program and study materials. At the same time, LifeLoop.Live enables users to reach
+                beyond their existing community, and engage with an ever-growing network of individuals and Christian
+                organizations.
+            </div>
+        </div>
+        <div class="row justify-content-center px-3 py-5 px-lg-5 bg-secondary text-center text-lg-left">
+            <div class="col-12 col-lg-3 ml-auto mb-4 mb-lg-0">
+                Does my church have to be a member of LifeLoop.live before I can use the site?
+            </div>
+            <div class="col-12 col-lg-6 mx-auto font-light text-grey">
+                No, LifeLoop.live is open to everyone. Once you create an account you can browse and join groups of
+                interest. However, if you want to manage a group using the LifeLoop.live platform, your organization
+                must be a member. You can sign your organization up
+                <a href="{{ url_for('orgs.new') }}">here</a>.
+            </div>
+        </div>
+        <div class="row justify-content-center px-3 py-5 px-lg-5 text-center text-lg-left border border-bottom-1">
+            <div class="col-12 col-lg-3 ml-auto mb-4 mb-lg-0">
+                How do I setup my organization’s page on LifeLoop.Live?
+            </div>
+            <div class="col-12 col-lg-6 mx-auto font-light text-grey">
+                <p class="mb-4">
+                    Once your organization has been signed up as a member, you can start setting up your organization’s
+                    homepage. This includes:
+                </p>
+                <ul class="pl-4 styled mb-0">
+                    <li class="mb-1">
+                        <span class="text-black">
+                            Inviting staff, volunteers, and members
+                        </span>
+                    </li>
+                    <li class="mb-1">
+                        <span class="text-black">
+                            Uploading images and videos
+                        </span>
+                    </li>
+                    <li class="mb-1">
+                        <span class="text-black">
+                            Adding links to website, social media and donation pages
+                        </span>
+                    </li>
+                    <li class="mb-1">
+                        <span class="text-black">
+                            Creating public and private groups based on topics and/or services relevant to your
+                            organization’s mission. (ex. bible study, support, counseling)
+                        </span>
+                    </li>
+                    <li class="mb-1">
+                        <span class="text-black">
+                            Creating organizational groups to manage your staff and/or volunteers
+                        </span>
+                    </li>
+                    <li>
+                        <span class="text-black">
+                            Setting group permissions (see below for more info on group permissions)
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row justify-content-center px-3 py-5 px-lg-5 bg-secondary text-center text-lg-left">
+            <div class="col-12 col-lg-3 ml-auto mb-4 mb-lg-0">
+                What are Groups?
+            </div>
+            <div class="col-12 col-lg-6 mx-auto font-light text-grey">
+                Groups are the cornerstone of the LifeLoop.Live experience, and are organized around topics such as
+                bible study, support, volunteer training and much more. Organizations create and use groups to
+                communicate and interact with their members.
+            </div>
+        </div>
+        <div class="row justify-content-center px-3 py-5 px-lg-5 text-center text-lg-left border border-bottom-1">
+            <div class="col-12 col-lg-3 ml-auto mb-4 mb-lg-0">
+                How do I find a specific Group?
+            </div>
+            <div class="col-12 col-lg-6 mx-auto font-light text-grey">
+                You can browse groups from our homepage, or use the use the “search group” button at the top right of
+                the page.
+            </div>
+        </div>
+        <div class="row justify-content-center px-3 py-5 px-lg-5 bg-secondary text-center text-lg-left">
+            <div class="col-12 col-lg-3 ml-auto mb-4 mb-lg-0">
+                How do I add groups to the site for my organization?
+            </div>
+            <div class="col-12 col-lg-6 mx-auto font-light text-grey">
+                Before you can add groups to the site, your organization must a member. You can sign your church
+                <a href="{{ url_for('orgs.new') }}">here</a>.
+                If your organization is already signed up, please refer to our
+                <a href="">knowledge base</a>
+                for instructions on creating and managing groups.
+            </div>
+        </div>
+        <div class="row justify-content-center px-3 py-5 px-lg-5 text-center text-lg-left">
+            <div class="col-12 col-lg-3 ml-auto mb-4 mb-lg-0">
+                What is a Group Leader?
+            </div>
+            <div class="col-12 col-lg-6 mx-auto font-light text-grey">
+                Group leaders are responsible managing groups. They can add and delete members to the group, send group
+                communications, schedule meetings, configure privacy settings, edit group descriptions and select group
+                images.
+            </div>
+        </div>
+        <div class="row justify-content-center px-3 py-5 px-lg-5 bg-secondary text-center text-lg-left">
+            <div class="col-12 col-lg-3 ml-auto mb-4 mb-lg-0">
+                How do I become a group leader?
+            </div>
+            <div class="col-12 col-lg-6 mx-auto font-light text-grey">
+                If your organization is already signed up with LifeLoop.Live, contact your organization’s administrator
+                and request an invite to become a group leader.
+            </div>
+        </div>
+        <div class="row justify-content-center px-3 py-5 px-lg-5 text-center text-lg-left">
+            <div class="col-12 col-lg-3 ml-auto mb-4 mb-lg-0">
+                What are Group Permissions and how do I set them?
+            </div>
+            <div class="col-12 col-lg-6 mx-auto font-light text-grey">
+                <p class="mb-4">
+                    There are three different settings for your groups that determine who can see and/or access a given
+                    group:
+                </p>
+                <ul class="pl-4 styled mb-0">
+                    <li class="mb-3">
+                        <span class="text-black">
+                            <strong>Public</strong>
+                            - Group is visible/present on the LifeLoop.Live home and on the organization's community
+                            page.
+                        </span>
+                    </li>
+                    <li class="mb-3">
+                        <span class="text-black">
+                            <strong>Organizational Only</strong>
+                            - Group is only visible/present on the specific organization's community page, i.e.
+                            lifeloop.live/yourchurch-or-lifeloop.live/yourministry
+                        </span>
+                    </li>
+                    <li class="mb-3">
+                        <span class="text-black">
+                            <strong>Private</strong>
+                            - Group is not visible to the community. Members of the group must be specifically invited.
+                            The group is only accessible from an individual's personal profile.
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row justify-content-center px-3 py-5 px-lg-5 bg-secondary text-center text-lg-left">
+            <div class="col-12 col-lg-3 ml-auto mb-4 mb-lg-0">
+                What do I do if I am having problems with any of LifeLoop.Live’s features such as web-conferencing or
+                text messaging?
+            </div>
+            <div class="col-12 col-lg-6 mx-auto font-light text-grey">
+                Please click
+                <a href="//lifelooplive.zendesk.com/hc/en-us" target="_blank">here</a>
+                to access our troubleshooting guide.
+            </div>
+        </div>
+    </div>
+    <section class="pre-footer py-5">
+        <div class="text-center d-none d-lg-block mx-auto py-5 px-3">
+            <h2 class="mb-5">
+                Haven't found the answer<br>
+                you are looking for?
+            </h2>
+            <p class="font-xlight lead mb-4">
+                Reach out to our friendly support team now!
+            </p>
+            <a class="btn btn-lg btn-danger" href="{{ url_for('contact') }}">
+                Contact us
+            </a>
+        </div>
+        <h2 class="d-lg-none text-center">
+            Ready to change your life?
+        </h2>
+        <div class="row d-lg-none mx-auto justify-content-center align-items-center">
+            {% with form=contact_form %}
+                {% include '_partials/contact.html' %}
+            {% endwith %}
+        </div>
+    </section>
+{% endblock %}

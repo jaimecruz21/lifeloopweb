@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import render_button %}
+
+{% block title %}
+    {% if reminder %}
+        Invitation Reminder!
+    {% else %}
+        Group Invitation
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <h3>
+        You've been invited to join <b>{{ group.name }}</b>!
+    </h3>
+    <p>
+        <a href="{{ index_url }}">LifeLoop.Live</a> is a place that lets organizations and groups communicate in a new way!
+    </p>
+    <p>
+        You're getting this email because an administrator or leader of {{ group.name }} wants to invite you to be a member!
+    </p>
+    <p>
+        <i>Accepting this request will not automatically register you in the parent organization 
+        (<strong>{{ group.parent_org.name }}</strong>) or any affiliated organizations.</i>
+    </p>
+    <p>
+        To get started, simply click on this link:
+    </p>
+    {{ render_button(register_url, 'Accept Invitation') }}
+{% endblock %}

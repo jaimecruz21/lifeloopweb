@@ -1,0 +1,47 @@
+<div class="page-header h-100 mb-2 mb-lg-4 p-4">
+    <h2 class="text-primary mb-3">
+        General Information
+    </h2>
+    {% if org.show_address %}
+      <div id="map" class="mb-3" data-address="{{ org.address.line1 }}, {{ org.address.line2 }}"></div>
+    {% endif %}
+
+    {% if org.data_esablished %}
+        <div class="mb-2">
+            <div class="text-secondary mb-1">
+                Founded
+            </div>
+            <p>
+                {{ org.data_established }}
+            </p>
+        </div>
+    {% endif %}
+
+    {% if org.links %}
+        <div class="my-3">
+            <div class="text-secondary mb-2">
+                Organization links
+            </div>
+            <div class="d-flex">
+                {% for link in org.links %}
+                    {% call render_tooltip(link.link_type.description, class='mr-3') %}
+                        <a href="{{ link.url }}" target="_blank">
+                            {{ render_icon(link.link_type.icon) }}
+                        </a>
+                    {% endcall %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if org.service_times_description %}
+        <div class="mb-2">
+            <div class="text-secondary mb-1">
+                Service times
+            </div>
+            <p>
+                {{ org.service_times_description }}
+            </p>
+        </div>
+    {% endif %}
+</div>

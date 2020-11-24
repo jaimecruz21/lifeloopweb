@@ -1,0 +1,121 @@
+{% extends 'layout.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+    <div class="jumbotron text-center">
+        <video preload playsinline autoplay loop muted id="video">
+            <source src="//res.cloudinary.com/lifeloop-live/video/upload/v1500575507/homepage_k5sejn.webm"
+                    type="video/webm">
+            <source src="//res.cloudinary.com/lifeloop-live/video/upload/v1500574848/homepage_ufee6j.mp4"
+                    type="video/mp4">
+        </video>
+        <div class="jumbotron-content d-flex flex-column justify-content-center">
+            <h1 class="display-3 mb-3">
+                Your Church Online. Anywhere. Anytime.
+            </h1>
+            <p class="lead mb-5 in">
+                <i>
+                    Connect and grow together
+                </i>
+            </p>
+            <p class="lead">
+                <a class="btn btn-danger btn-lg" href="{{ url_for('login') }}#signup" role="button">
+                    Join us
+                </a>
+            </p>
+            <a href="#filter" class="ll-scroll">
+                <img class="next" src="{{ asset_url_for('images/icons/next.png') }}" alt="next">
+            </a>
+        </div>
+    </div>
+    <nav class="nav filter justify-content-center d-block d-sm-flex" id="filter">
+        <p class="text-uppercase ll-title text-center d-block d-sm-none mb-4">
+            <b>Customize</b>
+            <br>
+            your search
+        </p>
+        <div class="nav-item dropdown align-self-center" data-name="gender">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+               aria-expanded="false">
+                Gender
+            </a>
+            <div class="dropdown-menu dropdown-menu-sm">
+                <a class="dropdown-item" href="#" data-value="all">
+                    For All
+                </a>
+                {% for value, description in filter['genders'] %}
+                    <a class="dropdown-item" href="#" data-value="{{ value }}">
+                        {{ description }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="nav-item dropdown align-self-center" data-name="age">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+               aria-expanded="false">
+                Age Range
+            </a>
+            <div class="dropdown-menu dropdown-menu-sm">
+                {% for age in filter['ages'] %}
+                    <a class="dropdown-item" href="#" data-value="{{ age.id }}">
+                        {{ age.description }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="nav-item dropdown align-self-center" data-name="order">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+               aria-expanded="false">
+                New first
+            </a>
+            <div class="dropdown-menu dropdown-menu-sm">
+                <a class="dropdown-item" href="#" data-value="recent">
+                    New first
+                </a>
+                <a class="dropdown-item" href="#" data-value="visit">
+                    Most visited
+                </a>
+            </div>
+        </div>
+        <div class="nav-item dropdown align-self-center ll-multiple" data-name="group_types">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+               aria-expanded="false">
+                All categories
+            </a>
+            <div class="dropdown-menu dropdown-menu-sm">
+                <a class="dropdown-item ll-all" href="#">
+                    All categories
+                </a>
+                {% for group_type in filter['group_types'] %}
+                    <a class="dropdown-item" href="#" data-value="{{ group_type.id }}">
+                        {{ group_type.description }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </nav>
+    <div class="container px-md-5 mt-5" id="featuredGroups">
+        <div class="px-xl-4">
+            <div class="text-center loader my-5"></div>
+            {% with groups=group_list %}
+                {% include '_partials/featured_groups.html' %}
+            {% endwith %}
+        </div>
+    </div>
+
+    {% with form=wtforms['contact'] %}
+        {% include '_partials/pre-footer-contact.html' %}
+    {% endwith %}
+
+    <!-- Modals -->
+    {% include '_modals/group.html' %}
+    {% with form=wtforms['confirm'] %}
+        {% include '_modals/confirm.html' %}
+    {% endwith %}
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ asset_url_for('homepage.js') }}"></script>
+{% endblock %}

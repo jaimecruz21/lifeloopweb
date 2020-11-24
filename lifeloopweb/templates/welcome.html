@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% from '_macros/global.html' import render_field %}
+
+{% block title %}Welcome!{% endblock %}
+{% set body_class = 'bg-l d-flex flex-column' %}
+
+{% block body %}
+    <div class="container-fluid p-0 d-flex flex-column" id="authPage" style="flex: 1;">
+        <div class="bg-white d-none d-md-flex align-items-center justify-content-between p-2 px-4" id="navbar">
+            <div>
+                <a href="{{ url_for('index') }}">
+                    <img src="{{ asset_url_for('images/logo/logo-w.png') }}" height="50">
+                </a>
+            </div>
+            <div class="text-uppercase">
+                Your Church, Online.<br>
+                <span class="text-secondary">Anytime. Anywhere.</span>
+            </div>
+        </div>
+
+        <div class="row no-gutters text-center" style="flex: 1;">
+            <div class="col col-lg-auto px-4 d-flex order-2 order-lg-1 bg-white align-items-center justify-content-center"
+                 id="signup-col">
+
+                <div id="signup-desktop-toggle">
+                    <h1 class="font-light">
+                        Already<br>
+                        a<br>
+                        member?
+                    </h1>
+                    <p class="text-muted font-xlight mb-5">Click below to login</p>
+                    <a href="#" class="btn btn-outline-primary btn-lg" id="show-signup-desktop">Login</a>
+                </div>
+
+                <div class="col-12 col-md-auto col-xl-4 mx-auto d-none" id="signup-content">
+                    <form method="post" action="{{ url_for('login', next=request.args.get('next')) }}">
+                        {{ form.csrf_token(id=False) }}
+
+                        <h1 class="font-light mb-0">Log in</h1>
+                        <p class="lead font-xlight text-muted">Enter details in form below</p>
+
+                        <div class="form-group text-left">
+                            {{ render_field(form.email, class='form-control-lg', id='loginEmail') }}
+                        </div>
+                        <div class="form-group text-left">
+                            {{ render_field(form.password, class='form-control-lg') }}
+                        </div>
+
+                        {{ render_field(form.submit, class='btn btn-danger px-5 btn-lg my-3 mb-lg-0') }}
+                        <input type="hidden" value="{{ next or '' }}" name="next">
+
+                        <div id="login-mobile-toggle">
+                            <p class="text-muted font-xlight">
+                                Sign your organization up as a (free) beta tester<br>
+                                <a href="#" id="show-login-mobile">sign up</a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col col-lg px-4 order-1 order-lg-2 text-white ll-bg-login align-items-center justify-content-center d-flex"
+                 id="login-col">
+                <!-- Begin MailChimp Signup Form -->
+                <form action="https://live.us17.list-manage.com/subscribe/post?u=4b1febf7389161a9fb176e71d&amp;id=f3cb56f178"
+                      method="post" target="_blank" class="mx-auto" id="login-content">
+
+                    <h1 class="font-light mb-0 mb-md-5">
+                        Lifeloop.live<br>
+                        is coming soon!
+                    </h1>
+                    <p class="lead font-xlight mb-3 mb-md-5">
+                        Transform the way your Church, Ministry or Nonprofit engages & grows it's community
+                    </p>
+                    <p>
+                        Sign your organization up as a (free) beta tester:
+                    </p>
+
+                    <div class="form-group text-center col-12 col-md-8 mx-auto">
+                        <label for="mce-EMAIL" class="mb-1">Email</label>
+                        <span class="text-danger">*</span>
+                        <input type="email" name="EMAIL" class="form-control form-control-lg" id="mce-EMAIL" required>
+                    </div>
+
+                    <div style="position: absolute; left: -5000px;" aria-hidden="true">
+                        <input type="text" name="b_4b1febf7389161a9fb176e71d_f3cb56f178" tabindex="-1">
+                    </div>
+
+                    <button type="submit" class="btn btn-danger btn-lg my-3 mb-lg-0">
+                        Get Exclusive access
+                    </button>
+
+                    <div id="signup-mobile-toggle">
+                        <p class="text-muted font-xlight">
+                            Already have an account?<br>
+                            You can <a href="#" id="show-signup-mobile">enter to it</a> right now
+                        </p>
+                    </div>
+                </form>
+                <!--End mc_embed_signup-->
+
+                <div class="d-none" id="login-desktop-toggle">
+                    <h1 class="font-light">
+                        Sign up<br>
+                        as a beta<br>
+                        tester
+                    </h1>
+                    <a href="#" class="btn btn-outline-danger btn-lg" id="show-login-desktop">Sign Up</a>
+                </div>
+            </div>
+        </div>
+
+        {% with footer_type='minimal mt-auto' %}
+            {% include 'footer.html' %}
+        {% endwith %}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+
+    <script src="{{ asset_url_for('login.js') }}"></script>
+{% endblock %}

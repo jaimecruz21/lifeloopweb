@@ -1,0 +1,32 @@
+<div class="page-header mt-3 mt-lg-4 p-3 px-lg-4 d-flex align-items-center justify-content-between border-radius-4">
+    <h2 class="m-0">
+        All Groups
+    </h2>
+
+    {% if current_user.is_authenticated and current_user_can_add_group %}
+        <div class="d-flex">
+            <a href="{{ url_for('groups.new', org_id=org.id) }}" class="btn btn-primary btn-sm mr-3 d-flex">
+                <span class="d-none d-sm-flex align-items-center">
+                    {{ render_icon('plus', class='mr-0 mr-sm-2') }}
+                    Add group
+                </span>
+                <span class="d-inline d-sm-none" style="font-size: 18px; line-height: 1;">+</span>
+            </a>
+            <a href="#modalMassEmail" class="btn btn-primary btn-sm d-flex align-items-center"
+               data-toggle="modal" id="btnMassEmail">
+                {{ render_icon('mail', class='mr-0 mr-sm-2') }}
+                <span class="d-none d-sm-inline">Email Members</span>
+            </a>
+        </div>
+    {% endif %}
+</div>
+<div class="row"
+    {% if current_user_can_edit_org %}
+        id="org-groups-sortable"
+    {% endif %}>
+        {% for group in org.public_and_org_only_groups() %}
+            <div class="col-12 px-0 px-lg-3 col-lg-3 d-flex align-items-stretch my-4" data-group-id="{{ group.id }}">
+                {{ group.render_as_card() }}
+            </div>
+        {% endfor %}
+</div>

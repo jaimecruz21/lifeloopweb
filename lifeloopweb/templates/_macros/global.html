@@ -1,0 +1,302 @@
+{% macro render_icon(filename, class='') %}
+    {% set default = '_svg/other.svg' %}
+    <span class="icon icon-{{ filename }} {{ class }}">
+        {% include ['_svg/%s.svg' % filename, default] %}
+    </span>
+{% endmacro %}
+
+{% macro render_card(heading, subheader='', class='', body='', height=0, min_height=0, actions='') %}
+    <div class="card w-100 {{ class }}">
+        <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+            <div class="mr-3">
+                {{ heading }}
+            </div>
+
+            {% if actions %}
+                {{ actions }}
+            {% endif %}
+        </div>
+
+        {% if subheader %}
+            <div class="card-header-second px-3 py-2 bg-info-secondary d-sm-flex align-items-center">
+                {{ subheader }}
+            </div>
+        {% endif %}
+
+        <div class="card-body p-0 {{ body }}" style="
+            {% if height %}max-height: {{ height }}px;{% endif %}
+            {% if min_height %}min-height: {{ min_height }}px;{% endif %}">
+            {{ caller() }}
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro render_tooltip(title, class='', placement='top') %}
+    <span data-toggle="tooltip" data-placement="{{ placement }}" title="{{ title }}" class="{{ class }}">
+        {% if caller %}
+            {{ caller() }}
+        {% endif %}
+    </span>
+{% endmacro %}
+
+{% macro render_field(field, label=True) %}
+    {% set class = '' %}
+
+    {% if 'class' in kwargs %}
+        {% set class = kwargs.pop('class') %}
+    {% endif %}
+
+    {% if field.type == 'SubmitField' %}
+        {{ field(class=class or 'btn btn-primary px-5', id=False, **kwargs) }}
+    {% elif field.type == 'HiddenField' %}
+        {{ field(**kwargs) }}
+    {% elif field.type == 'RadioField' %}
+        {{ field.label }}
+
+        <div class="custom-controls-stacked">
+            {% for radio in field %}
+                <div class="custom-control custom-radio">
+                    {{ radio(class='custom-control-input') }}
+                    <label class="custom-control-label text-initial" for="{{ radio.id }}">
+                        {{ radio.label.text }}
+                    </label>
+                </div>
+            {% endfor %}
+        </div>
+    {% elif field.type == 'MultiQuerySelectField' %}
+        {{ field.label }}
+        <div class="row no-gutters">
+            {% for f in field %}
+                <div class="col-6 col-lg-4">
+                    {{ render_field(f, label=False) }}
+                </div>
+            {% endfor %}
+        </div>
+    {% elif field.type in ['BooleanField', '_Option'] %}
+        <div class="custom-control custom-checkbox">
+            {{ field(class='custom-control-input ' + class, **kwargs) }}
+            <label class="custom-control-label text-initial" for="{{ kwargs.get('id') or field.id }}">
+                {% if caller %}
+                    {{ caller() }}
+                {% else %}
+                    {{ field.label.text }}
+                {% endif %}
+            </label>
+        </div>
+    {% else %}
+        {% set placeholder = kwargs.pop('placeholder', field.label.text) %}
+        {% set required = kwargs.pop('required', field.flags.required) %}
+
+        {% if label %}
+            {{ field.label }}
+
+            {% if field.flags.required %}
+                <span class="text-danger">*</span>
+            {% endif %}
+        {% endif %}
+
+        {{ field(class='form-control ' + class, placeholder=placeholder, required=required, **kwargs) }}
+    {% endif %}
+{% endmacro %}
+
+{% macro notification_action(notification) %}
+    {% if notification.group_id %}
+        {% set group = notification.group %}
+        {% set entity_show_url = url_for('groups.show', group_id=group.id) %}
+        {% set entity_main_image = group.render_main_image() %}
+    {% else %}
+        {% set organization = notification.organization %}
+        {% set entity_show_url = url_for('orgs.show', org_id=organization.id) %}
+        {% set entity_main_image = organization.render_main_image() %}
+    {% endif %}
+    <div class="d-flex mb-3">
+        <a href="{{ entity_show_url }}">
+            {{ entity_main_image }}
+        </a>
+        <div class="w-100">
+            {{ notification.type.description }}
+            <strong>by</strong>
+            {{ notification.from_user.full_name }}
+            ({{ notification.from_user.email }})
+            <small class="text-secondary">
+                {% if group %}
+                    Group:
+                    {{ group.name }}
+                {% else %}
+                    <br>
+                    Organization:
+                    {{ organization.name }}
+                {% endif %}
+            </small>
+        </div>
+    </div>
+    <div class="row no-gutters">
+        <div class="col-4 pr-3">
+            <a href="#notificationInfoModal" class="btn btn-sm btn-block btn-secondary notification-info"
+               data-toggle="modal"
+               data-notification-info="{{ url_for('notifications.show', notification_id=notification.id) }}"
+               data-notification-block="{{ url_for('notifications.block_as_spam', notification_id=notification.id) }}">
+                Info
+            </a>
+        </div>
+        <div class="col-4 pr-3">
+            <a href="{{ url_for('notifications.decline', notification_id=notification.id) }}"
+               class="btn col btn-sm btn-block btn-danger">
+                Decline
+            </a>
+        </div>
+        <div class="col-4">
+            <a href="{{ url_for('notifications.accept', notification_id=notification.id) }}"
+               class="btn col btn-sm btn-block btn-primary">
+                Accept
+            </a>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro notification_acknowledge(notification) %}
+    {% if notification.group_id %}
+        {% set group = notification.group %}
+        {% set entity_show_url = url_for('groups.show', group_id=group.id) %}
+        {% set entity_main_image = group.render_main_image() %}
+    {% endif %}
+    {% if notification.organization_id %}
+        {% set organization = notification.organization %}
+        {% set entity_show_url = url_for('orgs.show', org_id=organization.id) %}
+        {% set entity_main_image = organization.render_main_image() %}
+    {% endif %}
+    <div class="d-flex">
+        <a href="{{ entity_show_url }}">
+            {{ entity_main_image }}
+        </a>
+        <div class="w-100">
+            {% if not notification.acknowledge_only %}
+                {{ notification.type.description }}
+                from {{ notification.from_user.email }} has been
+                {% if notification.accepted %}
+                    <strong>accepted</strong>
+                {% else %}
+                    <strong>declined</strong>
+                {% endif %}
+            {% elif notification.type.description == "Declined Alert" %}
+                Invitation to {{ notification.from_user.email }} has been declined
+            {% elif notification.type.description == "Accepted Alert" %}
+                Invitation to {{ notification.from_user.email }} has been accepted
+            {% else %}
+                {{ notification.type.description }}
+            {% endif %}
+
+            {% if current_user.email != notification.to_user.email %}
+                <br>
+                {{ notification.to_user.email }}
+            {% endif %}
+
+            <div class="d-flex justify-content-between align-items-end mt-2">
+                <div>
+                    <small class="text-secondary">
+                        {% if group %}
+                            Group:
+                            {{ group.name }}
+                        {% endif %}
+                        {% if organization %}
+                            <br>
+                            Organization:
+                            {{ organization.name }}
+                        {% endif %}
+                    </small>
+                </div>
+                <div class="ml-3">
+                    <a href="{{ url_for('notifications.acknowledge', notification_id=notification.id) }}"
+                       class="btn btn-sm btn-block btn-primary px-3">
+                        Acknowledge
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro render_notifications(notifications, dropdown=False) %}
+    <ul class="list-group list-group-flush scrollable">
+        {% for notification in notifications %}
+            <li class="list-group-item p-3">
+                {% if notification.needs_action %}
+                    {{ notification_action(notification) }}
+                {% else %}
+                    {{ notification_acknowledge(notification) }}
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    {% if dropdown %}
+        <div class="p-2 text-center border-0 border-right-0 border-bottom-0 border-left-0" id="notifications-all">
+            <a href="{{ url_for('users.show', user_id=current_user.id) }}">Show all</a>
+        </div>
+    {% endif %}
+{% endmacro %}
+
+{% macro render_anchor(url, text) -%}
+    <a href="{{ url }}">{{ text }}</a>
+{%- endmacro %}
+
+{% macro render_alert(messages, category) %}
+    <div class="alert alert-{{ category }} fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+
+        {% for msg in messages %}
+            {{ msg|safe }}
+        {% endfor %}
+    </div>
+{% endmacro %}
+
+{% macro render_modal(title, id, footer=False) %}
+    {% set title_id = kwargs.pop('title_id', '') %}
+    {% set class = kwargs.pop('class', '') %}
+    {% set size = kwargs.pop('size', 'sm') %}
+
+    <div class="modal fade {{ class }}" id="{{ id }}">
+        <div class="modal-dialog modal-{{ size }}">
+            <div class="modal-content">
+                <div class="modal-header p-3">
+                    <h4 class="modal-title {% if size == 'xs' %}mx-auto{% endif %}"
+                        {% if title_id %}id="{{ title_id }}"{% endif %}>
+                        {{ title }}
+                    </h4>
+                </div>
+                <div class="modal-body pt-0">
+                    {% if caller %}
+                        {{ caller() }}
+                    {% endif %}
+                </div>
+
+                {% if footer %}
+                    <div class="modal-footer d-block">
+                        {{ footer }}
+                    </div>
+                {% endif %}
+            </div>
+            <a class="close modal-btn" data-dismiss="modal">
+                ×
+            </a>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro render_list_group(list, empty='', height=0) %}
+    {% if not list and empty %}
+        <div class="p-5 text-center text-secondary">
+            {{ empty }}
+        </div>
+    {% else %}
+        <div class="list-group list-group-flush with-border"
+             style="{% if height %}max-height: {{ height }}px;{% endif %}">
+            {% for item in list %}
+                <div class="list-group-item d-flex justify-content-between">
+                    {{ caller(item) }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endmacro %}

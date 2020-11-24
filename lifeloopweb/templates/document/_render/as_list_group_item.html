@@ -1,0 +1,18 @@
+{% from '_macros/global.html' import render_icon, render_tooltip %}
+
+<a href="{{ document.file_url }}" class="d-block d-flex align-items-center" target="_blank">
+    {{ render_icon('document', class='mr-3') }}
+    {{ document.friendly_name }}
+</a>
+
+{% if current_user.can_edit_group(group_id) %}
+    <div class="btn-group d-flex-inline d-lg-none align-self-center" role="group">
+        {% call render_tooltip('Delete Document', placement='left') %}
+            <a href="#" class="confirm"
+               data-title="Confirm Delete Document"
+               data-action="{{ url_for('groups.document_delete', group_id=group_id, document_id=document.id) }}">
+                {{ render_icon('trash') }}
+            </a>
+        {% endcall %}
+    </div>
+{% endif %}

@@ -1,0 +1,87 @@
+---
+- name: deploy
+  hosts: "{{ hosts }}"
+  vars:
+    slack_token: "{{ lookup('env', 'SLACK_TOKEN') }}"
+  tasks:
+    - name: Notify start of deployment (Slack)
+      slack:
+        token: "{{ slack_token }}"
+        msg: "Starting deployment of application version {{ image_tag }} to {{ env }}"
+        color: warning
+        channel: "#development"
+      delegate_to: localhost
+      run_once: true
+
+    - name: copy Makefile
+      copy:
+        src: ../Makefile
+        dest: /var/www/apps/lifeloopweb/Makefile
+        owner: ubuntu
+        group: ubuntu
+        mode: 0664
+
+    - name: delete docker containers
+      command: docker rm -f lifeloopweb_web_1 lifeloopweb_database_1 lifeloopweb_db_util_1 > /dev/null;
+      ignore_errors: yes
+
+    - name: delete docker image
+      command: "docker rmi toneo/lifeloopweb_prod:{{ image_tag }} > /dev/null;"
+      ignore_errors: yes
+
+    - name: copy env_config
+      copy:
+        src: "../env_configs/{{ env }}"
+        dest: /var/www/apps/lifeloopweb/.env
+        owner: ubuntu
+        group: ubuntu
+        mode: 0664
+
+    - name: pull docker image
+      command: "docker pull {{ image_name }}:{{ image_tag }}"
+
+    - name: copy docker-compose file
+      copy:
+        src: "../docker-compose.{{ env }}.yml"
+        dest: "/var/www/apps/lifeloopweb/docker-compose.{{ env }}.yml"
+        owner: ubuntu
+        group: ubuntu
+        mode: 0664
+
+    - name: update docker-compose with image tag
+      lineinfile:
+        path:  "/var/www/apps/lifeloopweb/docker-compose.{{ env }}.yml"
+        regexp: "^    image: toneo/lifeloopweb_prod:"
+        line: "    image: toneo/lifeloopweb_prod:{{ image_tag }}"
+
+    - name: update docker-compose with paper trail subdomain
+      replace:
+        path:  "/var/www/apps/lifeloopweb/docker-compose.{{ env }}.yml"
+        regexp: "PAPERTRAIL_SUBDOMAIN"
+        replace: "{{ lookup('env', 'PAPERTRAIL_SUBDOMAIN') }}"
+
+    - name: update docker-compose with paper trail port
+      replace:
+        path:  "/var/www/apps/lifeloopweb/docker-compose.{{ env }}.yml"
+        regexp: "PAPERTRAIL_PORT"
+        replace: "{{ lookup('env', 'PAPERTRAIL_PORT') }}"
+
+    - name: start containers
+      command: make run
+      args:
+        chdir: /var/www/apps/lifeloopweb
+
+    - name: run database migrations
+      tags: db_migration
+      command: "docker-compose --verbose -f docker-compose.{{ env }}.yml exec -T web dockerize -timeout 121s -wait tcp://database:3306 lifeloop_db_manage upgrade head"
+      args:
+        chdir: /var/www/apps/lifeloopweb
+
+    - name: Notify end of deployment (Slack)
+      slack:
+        token: "{{ slack_token }}"
+        msg: "Completed deployment of application version {{ image_tag }} to {{ env }}"
+        color: good
+        channel: "#development"
+      delegate_to: localhost
+      run_once: true

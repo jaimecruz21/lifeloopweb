@@ -1,0 +1,34 @@
+{% from '_macros/global.html' import render_icon %}
+
+{% macro render_social() %}
+    <a href="//facebook.com/LifeLoop.Live" class="mr-2">
+        {% include '_svg/logo_facebook.svg' %}
+    </a>
+    <a href="//twitter.com/LifeLoopLive" class="mr-2">
+        {% include '_svg/logo_twitter.svg' %}
+    </a>
+    <a href="//linkedin.com/company/lifeloop-live/" class="mr-2">
+        {% include '_svg/logo_linkedin.svg' %}
+    </a>
+    <a href="//youtube.com/channel/UCv0StoLFlqIb8RW4g88kuTQ" class="mr-2">
+        {% include '_svg/logo_youtube.svg' %}
+    </a>
+{% endmacro %}
+
+{% macro render_join_button(text='Join', confirm=False) %}
+    {% if confirm %}
+        <a href="#"
+           class="btn btn-info btn-rounded btn-sm border-0 d-flex align-items-center confirm ml-3"
+           id="btnJoinOrg"
+           data-action="{{ confirm['url'] }}"
+           data-title="{{ confirm['message'] }}">
+            {{ render_icon('plus', class='mr-2') }}
+            {{ text }}
+        </a>
+    {% else %}
+        <a class="btn btn-secondary btn-rounded btn-sm d-flex align-items-center ml-3">
+            {{ render_icon('check', class='mr-2') }}
+            Joined
+        </a>
+    {% endif %}
+{% endmacro %}

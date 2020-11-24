@@ -1,0 +1,236 @@
+{% from '_macros/global.html' import render_field, render_icon %}
+{% from '_macros/global.html' import render_notifications with context %}
+
+{% if request.path[1:] not in ['login', 'invite'] %}
+    <div class="container-fluid d-none d-lg-block">
+        <div class="row" id="top-text">
+            <div class="col text-center align-self-center">
+                Your Church Online. Anywhere. Anytime.
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+{% set menu %}
+<li class="nav-item">
+    <a class="nav-link px-2 py-0 dropdown-toggle no-chevron d-flex align-items-start mb-1 mb-lg-0" href="#"
+       id="searchDropdown"
+       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        {{ render_icon('search', class='search') }}
+    </a>
+
+    <div class="dropdown-menu dropdown-menu-full bg-info my-0 py-0 py-lg-2" aria-labelledby="searchDropdown">
+        <div class="container text-white">
+            <form action="{{ url_for('orgs.search') }}" method="post">
+                {{ search_form.csrf_token(id=False) }}
+
+                <div class="form-row align-items-center">
+                    <div class="col-12 col-lg-4 mb-3 mb-lg-0">
+                        {{ render_field(search_form.name, label=False, id=False) }}
+                    </div>
+
+                    <div class="col-12 col-lg mb-3 mb-lg-0">
+                        {{ render_field(search_form.city, label=False, id=False) }}
+                    </div>
+
+                    <div class="col-12 col-lg mb-3 mb-lg-0">
+                        {{ render_field(search_form.state, label=False, id=False) }}
+                    </div>
+
+                    <div class="col-12 col-lg mb-3 mb-lg-0">
+                        {{ render_field(search_form.zip_code, label=False, id=False) }}
+                    </div>
+
+                    <div class="col-12 col-lg-auto">
+                        {{ render_field(search_form.submit, class='btn btn-danger btn-block', style='padding-top: 7px !important; padding-bottom: 8px !important;') }}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</li>
+<li class="nav-item d-none py-lg-4" id="mobileSearch">
+    <div>
+        {{ render_icon('search') }}
+    </div>
+    <div class="col-10">
+        <form action="{{ url_for('orgs.search') }}" method="post" class="js-mobile-search-form">
+            {{ search_form.csrf_token(id=False) }}
+
+            {{ render_field(search_form.name, label=False, id=False, placeholder=search_form.name.label.text) }}
+
+            <div class="d-none">
+                {{ render_field(search_form.state, label=False, id=False) }}
+            </div>
+        </form>
+    </div>
+    <div>
+        <a class="nav-link py-0 px-2 pt-lg-1 mt-lg-1 px-lg-3 text-secondary search-close" href="#">
+            {{ render_icon('plus') }}
+        </a>
+    </div>
+</li>
+{% if current_user.is_authenticated %}
+    <li class="nav-item dropdown" id="userNotifications">
+        {% if notifications %}
+            {% set class='active' %}
+        {% endif %}
+
+        <a class="nav-link d-none d-lg-flex align-items-center mt-1 dropdown-toggle no-chevron py-0 px-lg-3 text-secondary"
+           href="#"
+           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{ render_icon('bell', class=class) }}</a>
+
+        <a href="#collapseNotifications" class="d-flex d-lg-none mt-1 px-2 py-0" id="notificationsDropdown"
+           data-toggle="collapse" aria-expanded="false" aria-controls="collapseNotifications">
+            {{ render_icon('bell', class=class) }}
+        </a>
+
+        {% if notifications %}
+            <div class="dropdown-menu mt-0 dropdown-menu-right" aria-labelledby="notificationsDropdown"
+                 style="max-height: 476px;">
+                {% if notifications %}
+                    {{ render_notifications(notifications[:10], dropdown=True) }}
+                {% else %}
+                    <div class="p-5 text-center text-secondary">
+                        You don't have any notifications.
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+    </li>
+{% endif %}
+{% endset %}
+
+<nav class="navbar navbar-expand-lg text-center navbar-light {{ navbar_type }}" role="navigation" id="navbar">
+    <div class="container mobile-scrollable">
+        <a class="navbar-brand" href="{{ url_for('index') }}">
+            <span class="sr-only">LifeLoop</span>
+        </a>
+
+        <!-- Mobile menu -->
+        <ul class="navbar-nav d-lg-none flex-row pr-2 ml-auto">
+            {{ menu }}
+        </ul>
+
+        <button class="navbar-toggler collapsed" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon">
+            </span>
+        </button>
+
+        <div class="collapse" id="collapseNotifications">
+            {% if notifications %}
+                {{ render_notifications(notifications[:10], dropdown=True) }}
+            {% else %}
+                <div class="p-5 text-center text-secondary">
+                    You don't have any notifications.
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="collapse navbar-collapse flex-column flex-lg-row justify-content-center align-items-center"
+             id="navbarSupportedContent">
+            <ul class="navbar-nav ml-lg-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('how_it_works') }}">How
+                        it works</a>
+                </li>
+                <li class="nav-item dropdown dropdown-large">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown"
+                       href="#" role="button" aria-haspopup="true"
+                       aria-expanded="false">
+                        Explore
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-large">
+                        <div class="row no-gutters">
+                            <div class="col-12 col-lg-6 text-center text-lg-left">
+                                <h4>Organizations</h4>
+                                <a href="{{ url_for('orgs.view_all') }}">Our Organizations</a>
+                                <a href="{{ url_for('orgs.new') }}">Add Your Organization</a>
+                            </div>
+
+                            <div class="col-12 col-lg-6 text-center text-lg-left mb-lg-0">
+                                <h4>Users</h4>
+
+                                <a href="{{ url_for('login') }}">Log-In</a>
+                                <a href="{{ url_for('login') }}#signup">Sign-Up Now</a>
+                                <a href="{{ url_for('invite') }}">Invite Others</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="//blog.lifeloop.live" class="nav-link"
+                       target="_blank">Blog</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('faq') }}" class="nav-link">FAQ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('contact') }}">Contact
+                        us</a>
+                </li>
+                {% if current_user.is_authenticated %}
+                    <li class="nav-item d-block d-lg-none">
+                        <a class="nav-link" href="{{ url_for('users.show', user_id=current_user.id) }}">My Profile</a>
+                    </li>
+                    <li class="nav-item d-block d-lg-none">
+                        <a class="nav-link" href="{{ url_for('logout') }}">Log out</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item d-block d-lg-none">
+                        <a href="{{ url_for('login') }}"
+                           class="btn btn-danger btn-lg d-block mt-3 mb-5">Log in</a>
+                    </li>
+                {% endif %}
+            </ul>
+
+            <ul class="navbar-nav ml-auto mb-4 mb-lg-0 d-none d-lg-flex align-items-center">
+                {{ menu }}
+
+                {% if current_user.is_authenticated %}
+                    <li class="nav-item d-none d-lg-flex">
+                        <div class="nav-link d-flex align-items-center">
+                            <a href="{{ url_for('users.show', user_id=current_user.id) }}">
+                                {{ current_user.render_main_image(33, 33) }}
+                            </a>
+                            <a class="nav-link d-inline-block px-0 dropdown-toggle" href="#" id="userDropdown"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{ current_user.short_name }}
+                            </a>
+
+                            <div class="dropdown-menu mt-0 dropdown-menu-right" aria-labelledby="userDropdown">
+                                <div class="py-2">
+                                    <a href="{{ url_for('users.show', user_id=current_user.id) }}"
+                                       class="dropdown-item d-flex justify-items-start align-items-center">
+                                        {{ render_icon('user', class='mr-2') }} Profile</a>
+                                    <a href="{{ url_for('contact') }}"
+                                       class="dropdown-item d-flex justify-items-start align-items-center">
+                                        {{ render_icon('mail', class='mr-2') }} Contact</a>
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <a href="{{ url_for('logout') }}"
+                                   class="dropdown-item d-flex justify-items-start align-items-center">
+                                    {{ render_icon('sign-out', class='mr-2') }}
+                                    Sign out
+                                </a>
+                            </div>
+                        </div>
+
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a href="{{ url_for('login') }}"
+                           class="btn btn-danger btn-lg d-block d-lg-inline mb-3 mt-0 ml-lg-4 my-lg-2">Log in</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

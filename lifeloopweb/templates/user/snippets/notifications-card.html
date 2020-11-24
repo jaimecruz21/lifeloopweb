@@ -1,0 +1,12 @@
+{% from '_macros/global.html' import render_card %}
+{% from '_macros/global.html' import render_notifications with context %}
+
+{% call render_card('Notifications', class='h-100', body='scrollable') %}
+    {% if notifications %}
+        {{ render_notifications(notifications) }}
+    {% else %}
+        <div class="p-5 text-center text-secondary">
+            You don't have any notifications.
+        </div>
+    {% endif %}
+{% endcall %}

@@ -1,0 +1,41 @@
+{% from '_macros/global.html' import render_field, render_icon, render_modal %}
+
+{% call render_modal('Create a Zoom Meeting', id='modalMeeting') %}
+     <form action="{{ url_for('groups.meeting_create', group_id=group.id) }}" method="post" id="groupMeetingForm">
+        {{ form.csrf_token(id=False) }}
+        {{ render_field(form.meeting_id, label=False) }}
+
+        <div class="form-group date left">
+            <label>
+                Your Timezone:
+                <span id="timezone">
+                    No timezone found
+                </span>
+            </label>
+            <div class="input-toggle left position-relative">
+                {{ render_field(form.start_datetime, label=False) }}
+                {{ render_icon('calendar', class='toggler') }}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ render_field(form.topic) }}
+        </div>
+        <div class="form-group">
+            {{ render_field(form.meeting_type) }}
+        </div>
+        <div class="form-group">
+            {{ render_field(form.duration) }}
+        </div>
+        <div class="form-group date left" id="repeat_end_date_div">
+            {{ form.repeat_end_date.label(id='repeat_end_date_label') }}
+
+            <div class="input-toggle left position-relative">
+                {{ render_field(form.repeat_end_date, label=False) }}
+                {{ render_icon('calendar', class='toggler') }}
+            </div>
+        </div>
+        <div class="text-center text-lg-right">
+            {{ render_field(form.submit, class='btn btn-primary', id='btnGroupMeeting') }}
+        </div>
+    </form>
+{% endcall %}

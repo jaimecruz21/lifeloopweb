@@ -1,0 +1,23 @@
+{% from '_macros/other.html' import render_social %}
+
+{# CONTEXT
+----------
+form #}
+
+<section class="pre-footer py-5">
+    <div class="row mx-auto justify-content-center align-items-center">
+        <div class="col-12 col-lg-5 pl-0 pr-0 pr-lg-5 py-lg-5 ll-social">
+            <h2 class="text-center text-lg-left mb-0 mb-md-3">
+                Ready to change
+                <br>
+                your life?
+            </h2>
+
+            <div class="d-none d-lg-block social-links">
+                {{ render_social() }}
+            </div>
+        </div>
+
+        {% include '_partials/contact.html' %}
+    </div>
+</section>

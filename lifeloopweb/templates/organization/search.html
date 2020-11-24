@@ -1,0 +1,71 @@
+{% extends 'layout.html' %}
+{% from '_macros/global.html' import render_field %}
+
+{% block title %}Organization Search{% endblock %}
+{% set body_class = 'bg-profile d-flex justify-content-between flex-column' %}
+
+{% block body %}
+    <div class="container-fluid mt-5 mb-auto">
+        <div class="row mb-5">
+            <div class="col col-lg-auto">
+                <div class="bg-white p-3 p-lg-4">
+                    <h5 class="mb-5">
+                        Advanced Organization Search
+                    </h5>
+                    <form method="post" action="{{ url_for('orgs.search') }}" id="orgSearchForm">
+                        {{ form.csrf_token(id=False) }}
+
+                        <div class="form-group">
+                            {{ render_field(form.name) }}
+                        </div>
+                        <div class="form-group">
+                            {{ render_field(form.city) }}
+                        </div>
+                        <div class="form-group">
+                            {{ render_field(form.state) }}
+                        </div>
+                        <div class="form-group">
+                            {{ render_field(form.zip_code) }}
+                        </div>
+                        <div class="text-center">
+                            {{ render_field(form.submit) }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-12 col-lg mt-5 mt-lg-0">
+                <h5 class="mb-5 text-center text-lg-left">
+                    Found
+                    {{ orgs|length }}:
+                </h5>
+
+                {% if orgs %}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Address</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for org in orgs %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('orgs.show', org_id=org.id) }}">{{ org.name }}</a>
+                                    </td>
+                                    <td>
+                                        {{ org.address.formatted }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p class="text-center text-secondary">
+                        No results found for this search.
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

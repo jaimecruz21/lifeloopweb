@@ -1,0 +1,38 @@
+{% from '_macros/global.html' import render_icon, render_tooltip %}
+
+<a href="{{ url_for('groups.show', group_id=group.id) }}" class="d-flex align-items-center">
+    {{ group.render_main_image() }}
+
+    <div>
+        <u>
+            {{ group.name }}
+        </u>
+
+        {% if group.parent_org %}
+            <small class="mt-2 d-flex align-items-center">
+                {{ render_icon('location', class='mr-1') }}
+                {{ group.parent_org.address.city }}
+            </small>
+        {% endif %}
+    </div>
+</a>
+<div class="btn-group d-flex d-lg-none align-self-center" role="group">
+    {% if group.organizations %}
+        {% set org_id = group.parent_org.id %}
+    {% endif %}
+
+    {% if current_user.can_edit_group(group_id=group.id) %}
+        {% call render_tooltip('Edit group', placement='left', class='mr-3') %}
+            <a class="text-secondary" href="{{ url_for('groups.edit', group_id=group.id) }}">
+                {{ render_icon('settings') }}
+            </a>
+        {% endcall %}
+    {% endif %}
+
+    {% call render_tooltip('Leave Group', placement='left') %}
+        <a href="#" class="confirm text-secondary" data-title="Confirm Leave Group"
+           data-action="{{ url_for('users.group_leave', user_id=current_user.id, group_id=group.id) }}">
+            {{ render_icon('leave-cross') }}
+        </a>
+    {% endcall %}
+</div>

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import render_button %}
+
+{% block title %}
+    {% if reminder %}
+        Affiliation Reminder!
+    {% else %}
+        Group Affiliation
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <h3>
+        {{ group.name }} wants your organization to affiliate with their group!
+    </h3>
+    <p>
+        {% if reminder %}
+            This is a Reminder requested by {{ email }}:<br>
+        {% endif %}
+        The group <strong>{{ group.name }}</strong> on <a href="{{ index_url }}">LifeLoop.Live</a>
+        requested that your organization affiliate with {{ group.name }}. This will show the group on your organization page, and will list your organization as part of the group on it's front page.
+    </p>
+    <p>
+        To accept this invitation, go to <a href="{{ index_url }}">Lifeloop.live</a>,
+        log in, and then click your username on the top right of the page. Under notifications, click on 'accept' next to the corresponding notification.
+    </p>
+    {{ render_button(login_url, 'Login') }}
+    <p>
+        <i>If you believe this type of notification from {{ email }} is spam, and would like to permanently block it from appearing in your group again, click "Info" in the notification and then click "Block Future Notifications". <br>
+        <b>(Caution: This cannot be undone!)</b></i>
+    </p>
+
+    <p>
+        If you need any further assistance, please email us at <a href="mailto:support@lifeloop.live">support@lifeloop.live</a>, thanks!
+    </p>
+{% endblock %}

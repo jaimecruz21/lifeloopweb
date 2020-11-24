@@ -1,0 +1,42 @@
+{% from '_macros/global.html' import render_card, render_field %}
+
+{% call render_card('General info', class='mb-4', body='p-3') %}
+    <form method="POST" action="{{ url_for('groups.update', group_id=group.id) }}" id="groupUpdateForm">
+        {{ form.csrf_token(id=False) }}
+
+        <div class="row no-gutters">
+            <div class="col-12 col-lg pr-lg-3">
+                <div class="form-group">
+                    {{ render_field(form.description, rows='10') }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.privacy_settings) }}
+                </div>
+                <hr class="bg-secondary">
+                <div class="form-group">
+                    {{ render_field(form.anonymous, label=False) }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.member_limit, placeholder='Leave Empty if Group Has No Member Limit') }}
+                </div>
+            </div>
+            <div class="col-12 col-lg pl-lg-3">
+                <div class="form-group">
+                    {{ render_field(form.age_range) }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.gender_focus) }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.meet_times, class='p-0', style='list-style-type: none;') }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.group_category) }}
+                </div>
+            </div>
+        </div>
+        <div class="text-center text-lg-right">
+            {{ render_field(form.submit, class='btn btn-primary submit', id='btnSaveGeneralInfo') }}
+        </div>
+    </form>
+{% endcall %}

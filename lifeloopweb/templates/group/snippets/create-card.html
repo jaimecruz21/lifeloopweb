@@ -1,0 +1,63 @@
+{% from '_macros/global.html' import render_card, render_field %}
+
+{% set heading = 'Enroll your group into the LifeLoop.Live platform' %}
+
+{% set subheader %}
+    {{ render_icon('info', class='mt-2 mt-sm-0 mb-1 mb-sm-0 mr-3 mr-sm-2 float-left float-sm-none') }}
+
+    If you have any questions, please feel free to
+    <a href="{{ url_for('contact') }}" class="ml-0 ml-sm-2">
+        contact us
+    </a>
+{% endset %}
+
+{% call render_card(heading, class='h-100', body='p-3', subheader=subheader) %}
+    <form method="post" action="{{ url_for('groups.new', org_id=org.id) }}" id="groupNewForm">
+        {{ form.csrf_token(id=False) }}
+
+        <div class="row no-gutters">
+            <div class="col-12 col-lg mb-3 pr-lg-3">
+                <div class="form-group">
+                    {{ render_field(form.name) }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.org) }}
+                </div>
+                <div class="form-group" id="owner-checkbox">
+                    {{ render_field(form.user_is_leader, label=False, checked=true) }}
+                </div>
+                <div class="form-group d-none" id="owner-wrapper">
+                    {{ render_field(form.owner, class='text-input', required=false,
+                                    placeholder='Search for owner by Last Name') }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.privacy_settings) }}
+                </div>
+                <hr>
+                <div class="form-group">
+                    {{ render_field(form.anonymous, label=False) }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.group_category) }}
+                </div>
+            </div>
+            <div class="col-12 col-lg mb-3 pl-lg-3">
+                <div class="form-group">
+                    {{ render_field(form.description, rows=5) }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.age_range) }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.gender_focus) }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.meet_times, class='p-0', style='list-style-type: none;') }}
+                </div>
+            </div>
+        </div>
+        <div class="text-center text-lg-right">
+            {{ render_field(form.submit, class='btn btn-primary px-5') }}
+        </div>
+    </form>
+{% endcall %}

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import render_button %}
+
+{% block title %}
+    {% if reminder %}
+        Invitation Reminder!
+    {% else %}
+        Organization Invitation
+    {% endif %}
+{% endblock %}
+{% block content %}
+    <h3>
+        {% if reminder %}
+            {{ org.name }} has sent you a reminder!
+        {% else %}
+            A LifeLoop user has invited you to join {{ org.name }}!
+        {% endif %}
+    </h3>
+    <p>
+        <a href="{{ index_url }}">LifeLoop.Live</a>
+        is a place that lets organizations and groups communicate in a new way!
+    </p>
+    <p>
+        You're getting this email because an an administrator or leader of
+        {{ org.name }}
+        wants to invite you to be a member!
+    </p>
+    {% if role %}
+        <p>
+            They also will be assigning you a role of
+            <strong>{{ role }}</strong>.
+        </p>
+    {% endif %}
+    <p>
+        To get started, simply click on this link:
+    </p>
+    {{ render_button(register_url, 'Accept Invitation') }}
+{% endblock %}

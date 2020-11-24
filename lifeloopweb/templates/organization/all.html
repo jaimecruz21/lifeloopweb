@@ -1,0 +1,68 @@
+{% extends 'layout.html' %}
+
+{% block title %}Our organizations{% endblock %}
+{% set navbar_type = 'desktop-transparent position-absolute w-100' %}
+
+{% block body %}
+    <section class="background bg-o d-flex align-items-center">
+        <h1 class="text-center mx-auto">
+            <span class="d-lg-none font-xlight">Our</span>
+            Organizations
+        </h1>
+    </section>
+    <div class="container my-lg-5 pt-5 px-0 px-md-5">
+        <h2 class="text-center mb-5 pb-5 d-none d-lg-block">
+            List of our organizations
+        </h2>
+
+        {% if not organizations %}
+            <h4 class="mt-5 mt-lg-0 mb-5 font-xlight text-center">
+                No organizations found
+            </h4>
+        {% else %}
+            <div class="row no-gutters px-xl-4">
+                {% for org in organizations %}
+                    <div class="col-12 col-sm-6 col-lg-4 col-xl-3 px-4 d-flex align-items-stretch">
+                        {% set groups_length = org.groups|length or 'No' %}
+
+                        <div class="card card-featured w-100 mb-5 mx-auto">
+                            <a href="{{ url_for('orgs.show', org_id=org.id) }}" class="d-block">
+                                <div class="card-img-top" style="background-image: url('{{ org.main_image.url }}');"></div>
+                            </a>
+                            <div class="card-body">
+                                <div class="ll-title mb-3">
+                                    <p class="ll-organizations mb-1 text-secondary">
+                                        {{ groups_length }}
+
+                                        {% if groups_length == 1 %}
+                                            group
+                                        {% else %}
+                                            groups
+                                        {% endif %}
+
+                                        in this organization
+                                    </p>
+                                    <div>
+                                        <h4 class="card-title">
+                                            <a href="{{ url_for('orgs.show', org_id=org.id) }}">{{ org.name }}</a>
+                                        </h4>
+                                    </div>
+                                </div>
+                                <p class="card-text ll-description" data-content="modal">
+                                    {{ org.description|safe }}
+                                </p>
+                            </div><!--/.card-body-->
+                        </div><!--/.card-->
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    {% with form=contact_form %}
+        {% include '_partials/pre-footer-contact.html' %}
+    {% endwith %}
+
+    <!-- Modals -->
+    {% include '_modals/group.html' %}
+{% endblock %}

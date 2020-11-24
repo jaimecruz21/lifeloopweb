@@ -1,0 +1,58 @@
+{% from '_macros/global.html' import render_card, render_icon, render_tooltip %}
+
+{% set organizations = group.organizations %}
+
+{% set organizationsActions %}
+    <a href="#modalAddOrganization" data-toggle="modal" class="btn btn-primary btn-sm d-flex">
+        {{ render_icon('plus', class='mr-0 mr-md-2') }}
+        <span class="d-none d-md-inline">Add Partner Org</span>
+    </a>
+{% endset %}
+
+{% call render_card('Organizations', class='mb-4 h-100 flex-1', body='scrollable', actions=organizationsActions) %}
+    {% if not organizations %}
+        <div class="p-3 text-center text-secondary">
+            No Organizations
+        </div>
+    {% else %}
+        <div class="list-group list-group-flush">
+            {% for org in organizations %}
+                <div class="list-group-item d-flex justify-content-between">
+                    <div style="font-weight: 400" class="d-flex">
+                        <a href="{{ url_for('orgs.show', org_id=org.id) }}">
+                            {{ org.render_main_image() }}
+                        </a>
+                        <div>
+                            <a href="{{ url_for('orgs.show', org_id=org.id) }}">
+                                {{ org.name }}
+                            </a>
+                            <div class="text-secondary">
+                                {{ org.address.formatted }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-group d-flex d-lg-none" role="group">
+                        {% if current_user.can_edit_org(org.id) %}
+                            {% call render_tooltip('Edit Organization', placement='left', class='mt-2 mb-auto') %}
+                                <a class="text-secondary" href="{{ url_for('orgs.edit', org_id=org.id) }}">
+                                    {{ render_icon('settings') }}
+                                </a>
+                            {% endcall %}
+                        {% endif %}
+
+                        {% if organizations|length > 1 and org != group.parent_org %}
+                            {% call render_tooltip('Unaffiliate', placement='left', class='ml-3 mt-2 mb-auto') %}
+                                <a href="#" class="confirm"
+                                   data-action="{{ url_for('groups.org_unaffiliate', group_id=group.id, org_id=org.id) }}"
+                                   data-title="Unaffiliate your organization"
+                                   data-meesage="Are you sure you wish to unaffiliate your organization from this group?">
+                                    {{ render_icon('leave') }}
+                                </a>
+                            {% endcall %}
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endcall %}

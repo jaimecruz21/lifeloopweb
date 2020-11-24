@@ -1,0 +1,71 @@
+{% from '_macros/global.html' import render_card, render_icon %}
+
+{% set subheader %}
+    {{ render_icon('info', class='mt-2 mt-sm-0 mb-5 mb-sm-auto mr-3 mr-sm-2 float-left float-sm-none') }}
+
+    New users receive a 60 day free trial. Billing occurs monthly for each Leader license within your organization.
+{% endset %}
+
+{% call render_card('Prices', class='h-100', subheader=subheader) %}
+    <table class="table table-striped m-0">
+        <thead>
+            <tr>
+                <th class="p-3">
+                    Organization License
+                </th>
+                <th class="p-3">
+                    Price (per month)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="p-3"
+                    data-hint="If you have <strong>zero</strong> additional licenses, you will still have <u>one</u> leader license from the basic purchase.">
+                    <strong>Basic License</strong>
+                </td>
+                <td class="p-3">
+                    ${{ '%0.2f'| format(product_price * 0.01|float) }}
+                </td>
+            </tr>
+        <thead>
+            <tr>
+                <th class="p-3"
+                    data-hint="Purchasing one <i>additional</i> license will give you <u>two</u> leader licenses total.">
+                    Additional Group Leader Licenses
+                </th>
+                <th class="p-3"></th>
+            </tr>
+        </thead>
+        <tbody class="p-3"
+            data-hint="Additional License Pricing is based on <u>volume</u>. If you purchase ten additional licenses, all ten licenses will have the bulk purchase discount.">
+            {% for price in prices %}
+                {% set isRange = price['starting_quantity'] != price['ending_quantity'] %}
+
+                <tr>
+                    <td class="p-3">
+                        <strong>
+                            {{ price['starting_quantity'] }}
+
+                            {% if not price['ending_quantity'] %}
+                                +
+                            {% else %}
+                                {% if isRange %}
+                                    -
+                                    {{ price['ending_quantity'] }}
+                                {% endif %}
+                            {% endif %}
+                        </strong>
+                    </td>
+                    <td class="p-3">
+                        {{ price['formatted_unit_price'] }}
+
+                        {% if isRange %}
+                            each
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endcall %}

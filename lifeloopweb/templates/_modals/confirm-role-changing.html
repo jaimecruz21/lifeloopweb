@@ -1,0 +1,8 @@
+{% from '_macros/global.html' import render_modal %}
+
+{% call render_modal('Confirm member status changing', size='xs', class='text-center', id='confirmRoleModal') %}
+    <p class="mb-3" id="changeRoleMessage"></p>
+    <button type="submit" class="btn btn-primary" form="" id="confirmRoleSubmit">
+        Confirm
+    </button>
+{% endcall %}

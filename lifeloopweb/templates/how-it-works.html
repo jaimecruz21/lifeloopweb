@@ -1,0 +1,132 @@
+{% extends 'layout.html' %}
+{% from '_macros/global.html' import render_icon %}
+
+{% block title %}How it works{% endblock %}
+
+{# USED in header.html #}
+{% set navbar_type = 'desktop-transparent position-absolute w-100' %}
+
+{% block body %}
+    <section class="background bg-hiw d-flex align-items-center justify-content-center">
+        <h1 class="text-center">
+            How it works
+        </h1>
+    </section>
+    <div class="container px-0 px-lg-3 my-5">
+        <div class="row no-gutters pb-5 p-lg-5 align-items-center justify-content-center">
+            <div class="col-12 col-md-6 px-4 px-lg-5 order-2 order-md-1">
+                <h2 class="mb-4 mx-lg-5 text-center text-lg-left">
+                    LifeLoop.Live
+                    <span class="font-xlight">for Organizations</span>
+                </h2>
+                <div class="mx-lg-5">
+                    <p class="text-grey text-justify mb-4 mb-lg-5">
+                        LifeLoop.Live helps churches, ministries and other Christian organizations digitally express
+                        their mission in Christ. Our platform offers organizations an easy way to bring their members
+                        online, with features such as face-to-face group video, text-to-group messaging, social media
+                        integration, and screen-sharing of the Word and other program and study materials. At the same
+                        time, LifeLoop.Live enables users to reach beyond their existing community, and engage with an
+                        ever-growing network of individuals and Christian organizations.
+                    </p>
+                    <h3 class="mb-4 text-center text-lg-left">
+                        Mission
+                    </h3>
+                    <p class="mb-0 text-grey text-justify">
+                        Our mission is to empower organizations to grow, nurture, and engage their communities by
+                        becoming a more integral and meaningful part of people's lives, while at the same time helping
+                        individuals to connect for personal support and growth.
+                    </p>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 order-1 order-md-2 mb-5 mb-lg-0 px-4 px-lg-0">
+                <img src="{{ asset_url_for('images/how-it-works/organizations.png') }}" class="img-fluid"
+                     alt="lifeloop how it works diagram">
+            </div>
+        </div>
+        <div class="row no-gutters p-0 p-lg-5 align-items-center justify-content-center">
+            <div class="col-12 col-md-6 text-right mb-5 mb-lg-0 px-4 px-lg-0">
+                <img src="{{ asset_url_for('images/how-it-works/individuals.jpg') }}" class="img-fluid"
+                     alt="lifeloop how it works members">
+            </div>
+            <div class="col-12 col-md-6 px-4 px-lg-5 mt-lg-0">
+                <div class="mx-lg-5">
+                    <h2 class="mb-4 text-center text-lg-left">
+                        LifeLoop.Live
+                        <span class="font-xlight">for Individuals</span>
+                    </h2>
+                    <p class="mb-0 text-grey text-justify">
+                        For the individual, Lifeloop.Live offers free, convenient and easy access to all the benefits of
+                        an active Christian community. Whether it’s deep-dive interactive learning, having someone to
+                        talk to in times of need, a Sunday sermon, getting involved in service, or coordinating
+                        volunteer, inspirational, or entertainment events, it is all part of LifeLoop.Live. Members can
+                        explore Organizations of interest and find the Groups and fellow members that they can share
+                        life experiences through times of need or praise. LifeLoop.Live provides a platform to stay
+                        connected, engaged, and grow while working around their busy schedules and activities in a day.
+                        Our catalog of group offerings allows the member to find the perfect group of their interest,
+                        personality, and the perfect days and times that work with their schedule constraints.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row no-gutters">
+        <a class="order-1 col-12 px-3 py-4 mb-0 bg-secondary d-lg-none text-center collapsed d-flex align-items-center"
+           data-toggle="collapse" href="#collapse1" aria-expanded="false"
+           aria-controls="collapse1">
+            {{ render_icon('check', class='mr-3') }}
+            HOW TO CREATE OWN ORGANIZATION?
+        </a>
+        <a class="order-3 col-12 px-3 py-4 mb-0 bg-primary d-lg-none text-center collapsed d-flex align-items-center"
+           data-toggle="collapse" href="#collapse2" aria-expanded="false"
+           aria-controls="collapse2">
+            {{ render_icon('check', class='mr-3') }}
+            HOW can I join the group?
+        </a>
+        <div class="d-none d-lg-flex col-6 bg-secondary text-grey pt-5 pl-5 pr-5 pb-0">
+            <h3>HOW TO CREATE OWN ORGANIZATION?</h3>
+        </div>
+        <div class="d-none d-lg-flex col-6 bg-primary pt-5 pl-5 pr-5 pb-0">
+            <h3>HOW can I join the group?</h3>
+        </div>
+        <div class="order-2 col-12 col-lg-6 d-lg-flex flex-column justify-content-between bg-secondary text-grey p-4 p-lg-5 collapse"
+             id="collapse1">
+            <ol class="mb-5 text-grey">
+                <li class="mb-3">
+                    Click
+                    <a href="{{ url_for('orgs.new') }}">here</a>
+                    to enroll your organization.
+                </li>
+                <li class="mb-3">Configure your organization’s page.</li>
+                <li class="mb-3">Setup organizational roles for admins, group admins, group leaders, staff, and
+                    members.
+                </li>
+                <li class="mb-3">Create your group.</li>
+                <li class="mb-3">Invite your members.</li>
+                <li>
+                    Connect with other participating organizations for joint groups, community initiatives, or
+                    campaigns (optional).
+                </li>
+            </ol>
+            <p class="text-grey mb-0">
+                Please refer to our help guide for more detailed information.
+            </p>
+        </div>
+
+        <div class="order-4 col-12 col-lg-6 d-lg-flex flex-column justify-content-between bg-primary p-4 p-lg-5 collapse"
+             id="collapse2">
+            <ol class="mb-5">
+                <li class="mb-3">
+                    <a href="{{ url_for('login') }}#signup" class="text-white">Click here</a>
+                    to sign up and complete user profile registration.
+                </li>
+                <li class="mb-3">Browse organization and groups aligned with your interests.</li>
+                <li>Request to join organizations and groups.</li>
+            </ol>
+            <p class="mb-0">
+                Please refer to our resources page and our
+                <a href="{{ url_for('faq') }}" class="text-white">FAQ</a>
+                to learn more about how to get the most out of your LifeLoop.Live membership.
+            </p>
+        </div>
+    </div>
+{% endblock %}

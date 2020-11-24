@@ -1,0 +1,14 @@
+{% from '_macros/global.html' import render_field, render_modal %}
+
+{% call render_modal('Add an organization affiliation to this group', id='modalAddOrganization') %}
+    <form method="POST" action="{{ url_for('groups.org_add', group_id=group.id) }}" id="groupAddOrgForm">
+        {{ form.csrf_token(id=False) }}
+
+        <div class="form-group">
+            {{ render_field(form.orgs, label=False) }}
+        </div>
+        <div class="text-center text-lg-right">
+            {{ render_field(form.submit, class='btn btn-primary', id='btnAddOrganization') }}
+        </div>
+    </form>
+{% endcall %}

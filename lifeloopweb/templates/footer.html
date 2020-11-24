@@ -1,0 +1,31 @@
+<footer class="text-center {{ footer_type }}">
+    <div class="container">
+        <img src="{{ asset_url_for('images/logo/footer.png') }}" alt="logo" class="logo mb-4 mt-lg-3 mb-lg-5">
+        <ul class="nav justify-content-center d-none d-lg-flex mb-2 mx-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('how_it_works') }}">How it works</a>
+            </li>
+            <li class="nav-item">
+                <a href="//blog.lifeloop.live" class="nav-link"
+                   target="_blank">Blog</a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('faq') }}" class="nav-link">FAQ</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('contact') }}">Contact us</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('privacy') }}">Privacy</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('terms') }}">Terms & Conditions</a>
+            </li>
+        </ul>
+        <hr>
+        &copy; {{ current_year }}. All Rights reserved LifeLoop.
+    </div>
+</footer>

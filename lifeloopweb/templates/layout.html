@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+    {{ super() }}
+{% endblock %}
+
+{% block header %}
+    {% include 'header.html' %}
+    {% include '_partials/flash.html' %}
+{% endblock %}
+
+{% block body %}{% endblock %}
+
+{% block footer %}
+    {% include '_modals/notification-info.html' %}
+    {% include 'footer.html' %}
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+{% endblock %}

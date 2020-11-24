@@ -1,0 +1,10 @@
+{% from '_macros/global.html' import render_modal %}
+
+{% set footer %}
+    <a href="#" class="btn btn-sm btn-danger confirm" data-action=""
+       data-title="Are you sure you wish to block this notification? This action cannot be reversed">
+        Block Future Requests
+    </a>
+{% endset %}
+
+{{ render_modal('Notification Information', id='notificationInfoModal', footer=footer) }}

@@ -1,0 +1,109 @@
+version: '3'
+services:
+  proxy:
+    image: haproxy
+    ports:
+      - "8080:80"
+    volumes:
+      - ./haproxy_conf/:/usr/local/etc/haproxy
+    depends_on:
+      - web1
+      - web2
+      - web3
+  # True static content needs to be separated out in a logical manner:
+  # js, images, and if there are any true static HTML files. Routes
+  # in the app need to accomodate the separation too
+  # TODO https://www.nginx.com/resources/admin-guide/reverse-proxy/
+  web1:
+    image: lifeloop-nginx
+    build:
+      dockerfile: Dockerfile.nginx
+      context: .
+    environment:
+      - PROXY_HOST=flask1
+    volumes:
+      - ./nginx_conf/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx_conf/entrypoint.sh:/nginx/entrypoint.sh
+      - ./nginx_conf/sites-available:/etc/nginx/sites-available
+      - ./lifeloopweb/templates:/usr/share/nginx/html
+      - ./lifeloopweb/static:/usr/share/nginx/static/
+    depends_on:
+      - flask1
+  web2:
+    image: lifeloop-nginx
+    build:
+      dockerfile: Dockerfile.nginx
+      context: .
+    environment:
+      - PROXY_HOST=flask2
+    volumes:
+      - ./nginx_conf/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx_conf/entrypoint.sh:/nginx/entrypoint.sh
+      - ./nginx_conf/sites-available:/etc/nginx/sites-available
+      - ./lifeloopweb/templates:/usr/share/nginx/html
+      - ./lifeloopweb/static:/usr/share/nginx/static/
+    depends_on:
+      - flask2
+  web3:
+    image: lifeloop-nginx
+    build:
+      dockerfile: Dockerfile.nginx
+      context: .
+    environment:
+      - PROXY_HOST=flask3
+    volumes:
+      - ./nginx_conf/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx_conf/entrypoint.sh:/nginx/entrypoint.sh
+      - ./nginx_conf/sites-available:/etc/nginx/sites-available
+      - ./lifeloopweb/templates:/usr/share/nginx/html
+      - ./lifeloopweb/static:/usr/share/nginx/static/
+    depends_on:
+      - flask3
+  flask1:
+    image: lifeloopweb
+    build: .
+    env_file: .env
+    environment:
+      - FLASK_APP=lifeloopweb/lifeloopweb_app.py
+      - FLASK_DEBUG=1
+    volumes:
+      - .:/code
+    depends_on:
+      - database
+    command: dockerize -timeout 60s -wait tcp://database:3306 flask run -h 0.0.0.0 -p5000 --reload
+  flask2:
+    image: lifeloopweb
+    build: .
+    env_file: .env
+    environment:
+      - FLASK_APP=lifeloopweb/lifeloopweb_app.py
+      - FLASK_DEBUG=1
+    volumes:
+      - .:/code
+    depends_on:
+      - database
+    command: dockerize -timeout 60s -wait tcp://database:3306 flask run -h 0.0.0.0 -p5000 --reload
+  flask3:
+    image: lifeloopweb
+    build: .
+    env_file: .env
+    environment:
+      - FLASK_APP=lifeloopweb/lifeloopweb_app.py
+      - FLASK_DEBUG=1
+    volumes:
+      - .:/code
+    depends_on:
+      - database
+    command: dockerize -timeout 60s -wait tcp://database:3306 flask run -h 0.0.0.0 -p5000 --reload
+  database:
+    image: percona
+    volumes:
+      - ./database_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=1
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "8025:8025"

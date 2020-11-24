@@ -1,0 +1,211 @@
+{% from '_macros/global.html' import render_card, render_field, render_icon %}
+
+{% if group %}
+    {% set creator = group.parent_org.creator %}
+{% elif org %}
+    {% set creator = org.creator %}
+{% elif licensed %}
+
+{% endif %}
+
+{% set heading %}
+    {% if group %}
+        Group
+    {% elif licensed %}
+        Licensed
+    {% elif org %}
+        Organization
+    {% endif %}
+    members
+{% endset %}
+
+{% set actions %}
+    <div class="d-flex align-items-center">
+        {% if extra_btns %}
+            {% for button in extra_btns %}
+                {{ button }}
+            {% endfor %}
+        {% endif %}
+
+        {% if group and not group.is_joinable() %}
+            This Group is Currently Full
+        {% endif %}
+
+        {% if not licensed and (org or group.is_joinable()) %}
+            <a href="#modalAddMember" class="btn btn-primary btn-sm ml-3 d-flex" data-toggle="modal" id="btnAddModal">
+                {{ render_icon('plus', class='mr-2') }}
+                Add Member
+            </a>
+        {% endif %}
+    </div>
+{% endset %}
+
+{% call render_card(heading, class='flex-1 h-100', body='h-100 scrollable', height=315, min_height=203, actions=actions) %}
+    {% if not members %}
+        <div class="p-5 text-center text-secondary">
+            No
+            {% if group %}
+                group
+            {% elif org %}
+                org
+            {% endif %}
+            members added.
+        </div>
+    {% else %}
+        <table class="table table-striped m-0">
+            <thead class="bg-info-secondary text-white">
+                <tr>
+                    <th class="border-0 font-xlight">
+                        Full name
+                    </th>
+                    <th class="border-0 font-xlight">
+                        Email
+                    </th>
+                    {% if not licensed %}
+                        <th class="border-0 font-xlight">
+                            Status
+                        </th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for member in members %}
+                    {% if not licensed %}
+                        {% set user = member[0] %}
+                        {% if group %}
+                            {% set role = member[2] %}
+                            {% set read_only = user.id == current_user.id or not current_user.can_edit_group(group.id) %}
+                            {% set form_action = url_for('groups.update_user', group_id=group.id, user_id=user.id) %}
+                            {% set current_user_can_change_members_role = current_user.can_change_group_members_role(group) %}
+                        {% elif org %}
+                            {% set role = member[1] %}
+                            {% set read_only = user.id == current_user.id or (not current_user.super_admin and role.priority <= current_user.role_for_org(org.id).priority) %}
+                            {% set form_action = url_for('orgs.user_role_update', org_id=org.id, user_id=user.id) %}
+                            {% set current_user_can_change_members_role = True %}
+                        {% endif %}
+                    {% else %}
+                        {% set user = member %}
+                    {% endif %}
+
+                    <tr>
+                        <td class="px-3 py-2 d-flex align-items-center no-wrap">
+                            {{ user.render_main_image() }}
+                            {{ user.full_name }}
+
+                            {% if org and user.email == creator.email %}
+                               (Creator)
+                            {% endif %}
+                        </td>
+                        <td class="align-middle no-wrap">
+                            {{ user.email }}
+                        </td>
+                        {% if not licensed %}
+                            <td class="align-middle no-wrap">
+                                {% if read_only %}
+                                    {{ role.description }}
+                                {% else %}
+                                    <div class="dropdown show" id="memberRole">
+                                        <a href="#" id="dropdownMenuLink" class="dropdown-toggle d-inline-block"
+                                              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            {{ role }}
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-sm"
+                                             aria-labelledby="dropdownMenuLink">
+                                            <form method="POST" class="form-inline" action="{{ form_action }}"
+                                                  id="changeRoleForm{{ user.id }}"
+                                                  data-user-fullname="{{ user.full_name }}"
+                                                  data-user-role-id="{{ role.id }}">
+                                                {{ role_forms[user.id].csrf_token(id=False) }}
+
+                                                <input type="hidden" name="role" value="" required>
+
+                                                {% if group and current_user.can_edit_group(group.id) %}
+                                                    <div class="px-3 py-2">
+                                                        {{ render_field(role_forms[user.id].cohost_meeting,
+                                                                        class='js-cohost', label=False,
+                                                                        id='cohost_meeting' + user.id|string) }}
+                                                    </div>
+                                                {% endif %}
+
+                                                {% if current_user_can_change_members_role %}
+                                                    {% for role_id, description in role_forms[user.id].role.choices %}
+                                                        {% set role_link %}
+                                                            {% if role_forms[user.id].role.data == role_id %}
+                                                                {% set disabled = 'disabled' %}
+                                                            {% endif %}
+
+                                                            <a href="#" class="dropdown-item {{ disabled }}"
+                                                               data-change-role-id="{{ role_id }}"
+                                                               data-change-role-description="{{ description }}">
+                                                                {{ description }}
+                                                            </a>
+                                                        {% endset %}
+
+                                                        {% if description == 'Group Creator' %}
+                                                            {% if current_user == creator %}
+                                                                {{ role_link }}
+                                                            {% endif %}
+                                                        {% else %}
+                                                            {{ role_link }}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% endif %}
+
+                                                {% if group %}
+                                                    <a class="dropdown-item confirm"
+                                                       data-action="{{ url_for('groups.user_delete', group_id=group.id,
+                                                                               user_id=user.id) }}"
+                                                       data-title="Confirm Delete Member"
+                                                       data-message="{{ user.full_name_and_email }}">
+                                                        Delete member</a>
+                                                {% elif org %}
+                                                    <a class="dropdown-item confirm"
+                                                       data-action="{{ url_for('orgs.user_delete', org_id=org.id,
+                                                                               user_id=user.id) }}"
+                                                       data-title="Confirm Delete Member"
+                                                       data-message="{{ user.full_name_and_email }}">
+                                                        Delete member</a>
+                                                {% endif %}
+                                            </form>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+
+                {# TODO: Merge members and invited_users #}
+                {% for invited_user in invited_users %}
+                    {% if group %}
+                        {% set user = invited_user[0] %}
+                        {% set role = "Invited to Group" %}
+                    {% elif org %}
+                        {% set user = invited_user[0] %}
+                        {% set role = "Invited to Organization" %}
+                    {% endif %}
+
+                    {{ read_only }}
+
+                    {% if current_user.can_edit_group or current_user.can_edit_org %}
+                        <tr>
+                            <td class="project-people px-3 py-2 d-flex align-items-center no-wrap">
+                                {{ user.render_main_image() }}
+                                {{ user.full_name }}
+                            </td>
+                            <td class="project-title align-middle no-wrap">
+                                {{ user.email }}
+                            </td>
+                            <td class="project-actions align-middle no-wrap">
+                                {{ role }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endcall %}
+
+<!-- TODO: refactoring -->
+{% include '_modals/confirm-role-changing.html' %}

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Notification{% endblock %}
+
+{% block content %}
+    <p>
+        {{ notification.type.description }}
+        by you has been
+
+        {% if notification.accepted %}
+            <strong>
+                accepted
+            </strong>
+        {% endif %}
+
+        {% if notification.declined %}
+            <strong>
+                declined
+            </strong>
+        {% endif %}
+    </p>
+    {% if notification.group_id %}
+        <p>
+            Group:
+            {{ notification.group.name }}
+        </p>
+    {% endif %}
+    {% if notification.organization_id %}
+        <p>
+            Organization:
+            {{ notification.organization.name }}
+        </p>
+    {% endif %}
+    <p>
+        If you need any further assistance, please email us at <a href="mailto:support@lifeloop.live">support@lifeloop.live</a>, thanks!
+    </p>    
+{% endblock %}

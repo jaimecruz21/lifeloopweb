@@ -1,0 +1,21 @@
+{% from '_macros/global.html' import render_field, render_modal %}
+
+{% call render_modal('Add a member', id='modalAddMember') %}
+    {% if group %}
+        {% set action = url_for('groups.user_add', group_id=group.id) %}
+    {% elif org %}
+        {% set action = url_for('orgs.user_add', org_id=org.id) %}
+    {% endif %}
+
+    <form method="post" action="{{ action }}" class="d-flex flex-column justify-content-between">
+        {{ form.csrf_token(id=False) }}
+        {{ render_field(form.return_url, value=return_url) }}
+
+        <div class="form-group">
+            {{ render_field(form.email, class='form-control') }}
+        </div>
+        <div class="mb-3 mb-lg-0 text-center text-lg-right">
+            {{ render_field(form.submit, class='btn btn-primary') }}
+        </div>
+    </form>
+{% endcall %}

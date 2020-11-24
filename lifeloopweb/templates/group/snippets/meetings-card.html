@@ -1,0 +1,23 @@
+{% from '_macros/global.html' import render_card, render_icon, render_list_group %}
+
+{% set heading = 'Meetings' %}
+{% set empty = 'No meetings' %}
+
+{% set actions %}
+    {% if current_user_can_edit_group %}
+        <a href="#modalMeeting" class="btn btn-primary btn-sm d-flex align-items-center"
+           data-toggle="modal" id="btnAddMeeting">
+            {{ render_icon('plus', class='mr-2') }}
+            Create Zoom meeting
+        </a>
+    {% endif %}
+{% endset %}
+
+{% call render_card(heading, class='mb-4', body='d-flex justify-content-between flex-column', height=298, actions=actions) %}
+    {% call(meeting) render_list_group(meetings, empty=empty) %}
+        {{ meeting.render_as_list_group_item(context={
+            'group_name': group.name,
+            'group_id': group.id
+        }) }}
+    {% endcall %}
+{% endcall %}

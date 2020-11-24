@@ -1,0 +1,79 @@
+{% extends 'layout.html' %}
+
+{% block title %}Group - {{ group.name }}{% endblock %}
+{% set body_class = 'bg-profile d-flex flex-column justify-content-between' %}
+
+{% if current_user.is_authenticated %}
+    {% set current_user_can_edit_group = current_user.can_edit_group(group.id) %}
+    {% set current_user_can_view_group_items = current_user.can_view_group_items(group.id) %}
+{% endif %}
+
+{% block body %}
+    <div class="container pb-5 mb-auto">
+        <div class="row no-gutters mb-4 d-flex align-items-stretch mt-4 mt-lg-5">
+            <div class="col-12 col-lg-8 pr-lg-2 mb-4 mb-lg-0">
+                {% include 'group/snippets/view-page-header.html' %}
+            </div>
+            <div class="col-12 col-lg-4 pl-lg-3 d-flex flex-column">
+                {% if current_user.is_authenticated %}
+                    {% with members=members %}
+                        {% include 'group/snippets/members-card.html' %}
+                    {% endwith %}
+
+                    {% if current_user_can_view_group_items %}
+                        {% with meetings=meetings %}
+                            {% include 'group/snippets/meetings-card.html' %}
+                        {% endwith %}
+
+                        {% with documents=group.documents %}
+                            {% include 'group/snippets/documents-card.html' %}
+                        {% endwith %}
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Disqus mobile -->
+        {% if current_user.is_authenticated %}
+            {% if current_user_can_view_group_items %}
+                <div class="page-header p-3 d-block d-lg-none" id="disqus_thread_mobile">
+                    <noscript>Please enable JavaScript to view the comments</noscript>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <!-- MODALS -->
+    {% include '_modals/gallery.html' %}
+    {% if current_user.is_authenticated %}
+        {% with form=wtforms['confirm'] %}
+            {% include '_modals/confirm.html' %}
+        {% endwith %}
+        {% if current_user_can_edit_group %}
+            {% with form=wtforms['add_member'], return_url=add_member_return_url %}
+                {% include '_modals/add_member.html' %}
+            {% endwith %}
+            {% with form=wtforms['group_add_document'], google_api=google_api, google_form=wtforms['group_add_google_doc'] %}
+                {% include '_modals/group-add-document.html' %}
+            {% endwith %}
+            {% with form=wtforms['mass_email'], action=url_for('groups.email_group', group_id=group.id) %}
+                {% include '_modals/mass-email.html' %}
+            {% endwith %}
+            {% with form=wtforms['group_meeting'] %}
+                {% include '_modals/meeting.html' %}
+            {% endwith %}
+            {% with form=wtforms['text_message'], title='Text The Group' %}
+                {% include '_modals/text-members.html' %}
+            {% endwith %}
+        {% else %}
+            {% with form=wtforms['group_leaders_email'], title='Email the Group Leader' %}
+                {% include '_modals/email_group_leader.html' %}
+            {% endwith %}
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ asset_url_for('group-view.js') }}"></script>
+{% endblock %}

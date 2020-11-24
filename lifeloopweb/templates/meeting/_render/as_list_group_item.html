@@ -1,0 +1,108 @@
+{% from '_macros/global.html' import render_icon, render_tooltip %}
+
+<div class="w-75">
+    <p class="text-secondary">
+        <a href="{{ meeting.url(current_user.id) }}"
+           class="d-block" target="_blank">
+            <u>
+                {{ meeting.topic }}
+            </u>
+        </a>
+        <small>{{ meeting.info(current_user.timezone)|safe }}</small>
+    </p>
+    <div class="text-secondary d-flex align-items-center">
+        {% call render_tooltip('Start date') %}
+            {{ render_icon('calendar', class='') }}
+        {% endcall %}
+
+        <div class="ml-2 mr-3">
+            {{ meeting.meeting_start.strftime('%m/%d/%Y') }}
+
+            {% if meeting.repeat_end_date %}
+                -
+                {{ meeting.repeat_end_date.strftime('%m/%d/%Y') }}
+            {% endif %}
+        </div>
+
+        {% if meeting.duration %}
+            {% call render_tooltip('Duration', class='d-inline-flex') %}
+                {{ render_icon('time', class='') }}
+            {% endcall %}
+
+            <div class="ml-2">
+                {{ meeting.duration_time }}
+            </div>
+        {% endif %}
+    </div>
+</div>
+<div class="btn-group d-lg-none align-self-center" role="group">
+    <div class="addeventstc addtocalendar mr-3" data-dropdown-x="right" data-styling="none">
+        {% call render_tooltip('Add to calendar', placement='left') %}
+            <a href="#" class="atcb-link">
+                {{ render_icon('calendar') }}
+            </a>
+        {% endcall %}
+
+        <var class="atc_event">
+            <var class="atc_date_start">{{ meeting.start_with_timezone(current_user.timezone) }}</var>
+            <var class="atc_date_end">{{ meeting.end_with_timezone(current_user.timezone) }}</var>
+            <var class="atc_timezone">{{ current_user.timezone }}</var>
+            <var class="atc_title">LifeLoop.live {{ group_name }} Group Meeting - {{ meeting.topic }}</var>
+
+            {% if current_user.is_authenticated and current_user.can_edit_group(group_id=group_id) %}
+                <var class="atc_description">To start this meeting, go
+                    to:
+                    {{ meeting.start_url }}
+                    <p>
+                        To join this meeting after it has started:
+                        {{ meeting.join_url }}
+                    </p>
+                </var>
+            {% else %}
+                <var class="atc_description">
+                    To join this meeting, simply go to
+                    {{ meeting.join_url }}
+                </var>
+            {% endif %}
+
+            <var class="atc_location">Zoom Meeting</var>
+            <var class="atc_organizer">
+                {{ current_user.first_name }}
+                {{ current_user.last_name }}
+            </var>
+            <var class="atc_organizer_email">{{ current_user.email }}</var>
+        </var>
+    </div>
+
+    {% if current_user.can_edit_group(group_id) %}
+        {% call render_tooltip('Text group members', placement='left', class='mr-2') %}
+            <a href="#meetingTextMembersModal" data-toggle="modal" class="confirm"
+               data-action="{{ url_for('groups.meeting_text_create', group_id=group_id, meeting_id=meeting.id) }}"
+               data-title="Group Meeting Reminder">
+                {{ render_icon('text') }}
+            </a>
+        {% endcall %}
+
+        {% call render_tooltip('Edit Meeting', placement='left', class='mr-2') %}
+            <a href="#modalMeeting" data-toggle="modal"
+               class="meeting-edit"
+               data-meetingid="{{ meeting.id }}"
+               data-meetingtime="{{ meeting.meeting_start }}"
+               data-duration="{{ meeting.duration }}"
+               data-topic="{{ meeting.topic }}"
+               data-groupid="{{ group_id }}"
+               data-repeattype="{{ meeting.repeat_type }}"
+               {% if meeting.repeat_end_date %}data-repeatdate="{{ meeting.repeat_end_date }}"{% endif %}>
+                {{ render_icon('settings') }}
+            </a>
+        {% endcall %}
+
+        {% call render_tooltip('Delete Meeting', placement='left') %}
+            <a href="#" class="confirm"
+               data-action="{{ url_for('groups.meeting_delete', group_id=group_id, meeting_id=meeting.id) }}"
+               data-title="Confirm Delete Meeting">
+                {{ render_icon('trash') }}
+            </a>
+        {% endcall %}
+    {% endif %}
+</div>

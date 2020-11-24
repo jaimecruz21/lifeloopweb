@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import render_button %}
+
+{% block title %}
+    {% if reminder %}
+        Request Reminder!
+    {% else %}
+        Join Request
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <h3>
+        {% if reminder %}
+            A LifeLoop user has sent you a reminder!
+        {% else %}
+            A LifeLoop user requested to join your group!
+        {% endif %}
+    </h3>
+    <p>
+        Someone on <a href="{{ index_url }}">LifeLoop.Live</a> requested to join {{ group.name }}.
+    </p>
+    <p>
+        <i>Approving this request will not automatically register the user in the parent organization (<strong>{{ group.parent_org.name }}</strong>) or any affiliated organizations.</i>
+    </p>
+    <p>
+        This request was sent by: <strong>{{ email }}</strong>.
+        To accept his/her invitation, go to <a href="{{ index_url }}">LifeLoop.Live</a> and log in.
+    </p>
+    <h3>After Logging In:</h3>
+    <ul>
+        <li>Click your photo on the top right of the page to access your profile.
+        <li>Under notifications, click on 'accept' next to the corresponding notification.</li>
+    {{ render_button(login_url, 'Login') }}
+    </ul>
+    <p>
+        <i>If you believe this type of notification from {{ email }} is spam, click "Info" in the notification and then click "Block Future Notifications". <br>
+        <b>(Caution: This cannot be undone!)</b></i>
+    </p>
+    <p>
+        If you need any further assistance, please email us at <a href="mailto:support@lifeloop.live">support@lifeloop.live</a>, thanks!
+    </p>
+{% endblock %}

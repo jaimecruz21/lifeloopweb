@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+{% from '_macros/global.html' import render_icon %}
+
+{% block title %}Add Group{% endblock %}
+{% set body_class = 'bg-profile' %}
+
+{% block body %}
+    <div class="container pb-5">
+        <div class="page-header px-3 px-lg-4 mt-4 mt-lg-5 mb-4 d-flex align-items-center">
+            <h6 class="m-0">
+                <span class="d-block d-lg-inline mb-2 mb-lg-0">New group</span>
+                <span class="mx-2 text-secondary d-none d-lg-inline">|</span>
+                <span class="d-block d-lg-inline text-danger">Enroll a group</span>
+            </h6>
+        </div>
+
+        {% with form=form %}
+            {% include 'group/snippets/create-card.html' %}
+        {% endwith %}
+
+        {% if org and org.creator.id == current_user.id %}
+            {% with user=current_user, creator=current_user %}
+                {% include 'organization/snippets/licenses.html' %}
+            {% endwith %}
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ asset_url_for('group-new.js') }}"></script>
+{% endblock %}

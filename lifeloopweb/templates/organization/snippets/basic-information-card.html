@@ -1,0 +1,55 @@
+{% from '_macros/global.html' import render_card, render_field %}
+
+{% call render_card('Basic Information', class='mb-4', body='h-100 p-3') %}
+    <form method="POST" action="{{ url_for('orgs.update', org_id=org.id) }}" id="orgInfoForm">
+        {{ form.csrf_token(id=False) }}
+
+        <div class="row no-gutters">
+            <div class="col-12 col-lg pr-lg-3">
+                <div class="form-group">
+                    {{ render_field(form.name) }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.custom_url) }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.description, rows=6) }}
+                </div>
+            </div>
+            <div class="col-12 col-lg pl-lg-3">
+                <div class="form-group">
+                    {{ render_field(form.service_times) }}
+                </div>
+                <div class="form-group">
+                    {{ form.date_founded.label }}
+                    <div class="input-toggle left">
+                        {{ render_field(form.date_founded, label=False) }}
+                        {{ render_icon('calendar', class='toggler') }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.show_address) }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.street_address) }}
+                </div>
+                <div class="form-group mt-lg-4">
+                    <div class="row no-gutters">
+                        <div class="form-group col-12 col-lg-6 pr-lg-3">
+                            {{ render_field(form.city) }}
+                        </div>
+                        <div class="form-group col-12 col-lg-3 pr-lg-3">
+                            {{ render_field(form.state) }}
+                        </div>
+                        <div class="form-group col-12 col-lg-3">
+                            {{ render_field(form.zip_code, maxlength=5) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center text-lg-right mt-auto">
+            {{ render_field(form.submit) }}
+        </div>
+    </form>
+{% endcall %}

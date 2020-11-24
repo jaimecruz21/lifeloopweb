@@ -1,0 +1,10 @@
+FROM python:3.6.2-alpine3.6
+RUN apk update && apk add --update mysql-client
+RUN rm -rf /var/cache/apk
+WORKDIR /tools
+ADD docker/db_utils/db_utils_entrypoint.sh /tools/db_backup_entrypoint
+ADD docker/db_utils/crontab /var/spool/cron/crontabs/root
+ADD docker/db_utils/s3_backup.py /tools/s3_backup.py
+RUN chmod a+x /tools/s3_backup.py
+RUN pip install tinys3==0.1.12 requests==2.11.1
+CMD ["/tools/db_backup_entrypoint"]

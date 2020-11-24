@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+{% block head %}
+  {{ super() }}
+  <meta http-equiv="refresh" content="3;url={{ website_url }}" />
+{% endblock %}
+{% block title %}Error{% endblock %}
+
+
+{% set body_class = 'd-flex justify-content-between flex-column' %}
+
+{% block body %}
+    <div class="container text-center my-auto align-items-center">
+        <div class="my-5 pb-lg-5">
+            <img src="{{ asset_url_for('images/logo/tree-w.png') }}" class="mb-5" alt="LifeLoop.Live logo">
+            <h2 class="mb-4">
+               We're sorry, but something went wrong.
+            </h2>
+            <p>
+                Please try again later.
+            </p>
+        </div>
+    </div>
+{% endblock %}

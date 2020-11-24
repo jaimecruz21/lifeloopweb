@@ -1,0 +1,89 @@
+{% from '_macros/other.html' import render_join_button %}
+{% from '_macros/global.html' import render_icon %}
+
+{% if not group_list %}
+    <h4 class="mt-5 mt-lg-0 mb-5 font-xlight text-center">
+        No featured groups found
+    </h4>
+{% else %}
+    <div class="row mt-4 mt-lg-0">
+        {% for group in group_list %}
+            {% if group.parent_org.activated_at != None %}
+                <div class="col-12 col-sm-6 col-lg-4 col-xl-3 d-flex align-items-stretch px-3">
+                    <div class="card card-featured w-100 d-none mb-5 mx-auto">
+                        <a href="{{ url_for('groups.show', group_id=group.id) }}" class="d-block">
+                            <div class="card-img-top" style="background-image: url('{{ group.main_image.url }}');"></div>
+                        </a>
+
+                        <div class="ll-badges">
+                            {% set gender_focus_formatted = group.gender_focus_formatted %}
+
+                            {% if gender_focus_formatted %}
+                                {% if group.gender_focus == 'M' %}
+                                    {% set badge_color = 'info' %}
+                                {% elif group.gender_focus == 'F' %}
+                                    {% set badge_color = 'danger' %}
+                                {% else %}
+                                    {% set badge_color = 'primary' %}
+                                {% endif %}
+
+                                <span class="badge badge-{{ badge_color }}">
+                                    {{ gender_focus_formatted }}
+                                </span>
+                            {% endif %}
+
+                            {% if group.age_range %}
+                                <span class="badge badge-warning">
+                                    {{ group.age_range.description }}
+                                </span>
+                            {% endif %}
+                        </div><!-- .ll-badges -->
+
+                        <div class="card-body">
+                            <div class="ll-title d-flex justify-content-between mb-2">
+                                <div>
+                                    <h4 class="card-title">
+                                        <a href="{{ url_for('groups.show', group_id=group.id) }}">{{ group.name }}</a>
+                                    </h4>
+                                </div>
+
+                                {% if current_user.is_authenticated %}
+                                    <div class="ml-3">
+                                        {% if group in current_user.groups %}
+                                            {{ render_join_button() }}
+                                        {% else %}
+                                            {% if not current_user.can_view_group_items(group.id) and group.is_joinable() %}
+                                                {{ render_join_button(confirm={
+                                                    'message': 'Confirm Group Join Request',
+                                                    'url': url_for('groups.join_request', group_id=group.id)
+                                                }) }}
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="ll-title mb-3">
+                                <p class="ll-organizations mb-1">
+                                    {% set parent_org = group.parent_org %}
+
+                                    <a href="{{ url_for('orgs.show', org_id=parent_org.id) }}"
+                                       class="d-flex align-items-center">
+                                        {{ render_icon('location', class='mr-1') }}
+                                        {{ parent_org.address.city }}
+                                        <span class="mx-2">|</span>
+                                        <span style="color: #ff295f;">{{ parent_org.name }}</span>
+                                    </a>
+                                </p>
+                            </div>
+
+                            <p class="card-text ll-description" data-content="modal">
+                                {{ group.description|safe }}
+                            </p>
+                        </div><!--/.card-body-->
+                    </div><!--/.card-->
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}

@@ -1,0 +1,151 @@
+ @import 'mixins/card';
+
+.card {
+    .card-header {
+        min-height: 50px;
+        padding: .75rem .75rem .75rem 1.25rem;
+        border-radius: .25rem .25rem 0 0;
+        text-transform: uppercase;
+        font-weight: 500;
+        font-size: 12px;
+    }
+
+    .card-header-second {
+        min-height: 36px;
+        text-transform: uppercase;
+        font-size: 10px !important;
+        color: #ffffff;
+    }
+
+    .card-body {
+        padding: 15px;
+        font-size: 12px;
+
+        h3 {
+            font-size: 14px;
+            font-weight: 400;
+            color: #314471;
+        }
+
+        a:not(.btn) {
+            &:link,
+            &:visited {
+                color: $color-grey;
+            }
+
+            &:hover {
+                text-decoration: none;
+            }
+        }
+
+        .list-group-item {
+            min-height: 68px;
+            padding: 15px 20px;
+            margin-bottom: 0;
+            border-top: 1px solid transparent;
+            border-bottom: 1px solid #f2f3f4;
+
+            &:hover,
+            &:focus,
+            &:active {
+                background-color: $hover-color;
+            }
+
+            @media (max-width: 991px) {
+                padding: 15px;
+
+                .btn-group.d-none {
+                    text-align: right;
+                    display: block !important;
+                }
+            }
+        }
+
+        .list-group-item,
+        .table tr.with-hidden {
+            &:hover,
+            &:focus,
+            &:active {
+                .btn-group.d-lg-none {
+                    display: flex !important;
+                }
+            }
+
+            @media (max-width: 991px) {
+                .btn-group.d-none {
+                    text-align: right;
+                    display: block !important;
+                }
+            }
+        }
+
+        .form-control {
+            &:focus {
+                border-color: #08a708;
+            }
+        }
+
+        .dropdown-toggle[aria-expanded='true'] {
+            color: inherit;
+
+            &:after {
+                top: 0.15em;
+	            transform: rotate(-45deg);
+            }
+        }
+    }
+
+    &.card-featured {
+        @include card-featured;
+
+        .ll-badges {
+            @include card-featured-badges;
+            padding-left: 14px;
+        }
+
+        box-shadow: 0 0 60px #ccc;
+
+        &:hover {
+            box-shadow: 0 0 50px #333;
+        }
+
+        .card-img-top {
+            border-radius: 4px 4px 0 0;
+            margin-bottom: 10px;
+            height: 200px;
+            background: no-repeat top;
+            background-size: cover;
+        }
+    }
+
+    &.modal-nested {
+        margin-bottom: 0 !important;
+        box-shadow: none !important;
+
+        .ll-badges {
+            @include card-featured-badges;
+            padding-left: 45px;
+        }
+
+        border: none;
+
+        .card-img-top {
+            margin-bottom: 10px;
+            height: 440px;
+            background: no-repeat top;
+            background-size: cover;
+
+            @media (max-width: 991px) {
+                height: 200px;
+            }
+        }
+
+        .card-body {
+            padding: 30px 45px 45px 45px;
+
+            @media (max-width: 991px) {
+                padding: 20px;
+            }
+        }
+    }
+}

@@ -1,0 +1,85 @@
+{% extends 'layout.html' %}
+
+{% block title %}Group - {{ group.name }}{% endblock %}
+
+{% set body_class = 'bg-profile d-flex flex-column justify-content-between' %}
+{% set footer_type = 'mt-auto' %}
+{% set is_payed_up = group.parent_org.is_payed_up %}
+{% set creator = group.parent_org.creator %}
+
+{% block body %}
+    <div class="container pb-5">
+        {% include 'group/snippets/edit-page-header.html' %}
+
+        {% if not is_payed_up and not current_user.super_admin %}
+            <div class="alert alert-danger p-5 text-center" role="alert">
+                <h4 class="alert-heading">IMPORTANT</h4>
+                <p>
+                    <strong>{{ creator.full_name }}</strong>
+                    must update your billing information
+                </p>
+            </div>
+
+            {% if creator.id == current_user.id %}
+                {% with org=group.parent_org %}
+                    {% include 'organization/snippets/licenses.html' %}
+                {% endwith %}
+            {% endif %}
+        {% else %}
+            <div class="row no-gutters">
+                <div class="col-12 col-lg-8 pr-lg-2 d-flex flex-column justify-content-between">
+                    {% with form=wtforms['group_edit'] %}
+                        {% include 'group/snippets/general-info-card.html' %}
+                    {% endwith %}
+
+                    <div class="mb-4">
+                        {% with members=members, roles_forms=roles_forms %}
+                            {% include '_partials/members-card.html' %}
+                        {% endwith %}
+                    </div>
+
+                    {% with heading='Group Links', form=wtforms['link'], links=group.links, url_patterns={
+                        'create': url_for('links.create_for_group', group_id=group.id),
+                        'update': url_for('links.update_for_group', group_id=group.id, link_id='{}'),
+                        'delete': url_for('links.delete_for_group', group_id=group.id, link_id='{}')
+                    } %}
+                        {% include '_partials/links-card.html' %}
+                    {% endwith %}
+                </div>
+                <div class="col-12 col-lg-4 pl-lg-2 d-flex flex-column justify-content-between">
+                    {% include 'group/snippets/organizations-card.html' %}
+
+                    {% with heading='Group Media', entity=group %}
+                        {% include '_partials/media-card.html' %}
+                    {% endwith %}
+                </div>
+            </div>
+
+            <!-- MODALS -->
+            {% include '_modals/gallery.html' %}
+            {% with group=group, form=wtforms['add_member'], return_url=add_member_return_url %}
+                {% include '_modals/add_member.html' %}
+            {% endwith %}
+            {% with form=wtforms['group_add_org'] %}
+                {% include '_modals/add_organization.html' %}
+            {% endwith %}
+            {% with form=wtforms['confirm'] %}
+                {% include '_modals/confirm.html' %}
+            {% endwith %}
+            {% with form=wtforms['link'] %}
+                {% include '_modals/link.html' %}
+            {% endwith %}
+            {% with form=wtforms['mass_email'], action=url_for('groups.email_group', group_id=group.id) %}
+                {% include '_modals/mass-email.html' %}
+            {% endwith %}
+            {% with group=group, form=wtforms['text_message'], title='Text The Group' %}
+                {% include '_modals/text-members.html' %}
+            {% endwith %}
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ asset_url_for('group-edit.js') }}"></script>
+{% endblock %}

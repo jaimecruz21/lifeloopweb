@@ -1,0 +1,23 @@
+{% set durations = ['day', 'week', 'month'] %}
+
+<div class="dropdown show">
+    <span class="dropdown-toggle d-inline-block" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+        By {{ durations[selected] }}
+    </span>
+
+    <div class="dropdown-menu dropdown-menu-right dropdown-menu-sm"
+         aria-labelledby="dropdownMenuLink">
+        <form action="{{ url_for('orgs.chart_filter', org_id=org_id) }}"
+              method="post" class="org-chart-form">
+            {{ form.csrf_token(id=False) }}
+            {{ form.chart_id() }}
+            {{ form.duration() }}
+
+            {% for duration in durations %}
+                <a href="{{ duration }}" class="dropdown-item {% if loop.index0 == selected %} disabled{% endif %}">
+                    {{ duration|capitalize }}</a>
+            {% endfor %}
+        </form>
+    </div>
+</div>

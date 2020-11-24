@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import render_button %}
+
+{% block title %}Organization Request{% endblock %}
+
+{% block content %}
+    <p>
+        A LifeLoop user has a request to create an organization
+    </p>
+    <p>
+        Someone on <a href="{{ index_url }}">LifeLoop.Live</a> requested to create
+        {{ org.name }}
+    </p>
+    <p>
+        Someone submitted the following email address in a request to create an organization:
+        {{ email }}.
+        To accept his/her request, go to
+        <a href="{{ index_url }}">LifeLoop.Live</a>,
+        log in, and click your username on the top right of the page. Under notifications, click on 'accept' next to the
+        corresponding notification.
+    </p>
+    {{ render_button(login_url, 'Login') }}
+    <p>
+        If you need any further assistance, please email us at <a href="mailto:support@lifeloop.live">support@lifeloop.live</a>, thanks!
+    </p>
+{% endblock %}

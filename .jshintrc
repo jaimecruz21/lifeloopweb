@@ -1,0 +1,7 @@
+{
+    "devel": true,
+    "indent": 4,
+    "globals": {
+        "$": false
+    }
+}

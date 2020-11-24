@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {% block head %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,shrink-to-fit=no,user-scalable=no">
+    <title>LifeLoop.Live - {% block title %}{% endblock %}</title>
+
+    <link rel="shortcut icon" href="{{ asset_url_for('images/favicon.ico') }}">
+
+    {% block styles %}
+        <!-- This is temporary, until Joel can get in and modify the addtocalendar display -->
+        <link href="https://addtocalendar.com/atc/1.5/atc-style-button-icon.css" rel="stylesheet" type="text/css">
+        <link href="https://addtocalendar.com/atc/1.5/atc-style-menu-wb.css" rel="stylesheet" type="text/css">
+        <link href="//fonts.googleapis.com/css?family=Montserrat:200,200i,300,400,700|Merriweather:400,400italic" rel="stylesheet">
+        <link href="{{ asset_url_for('vendor.css') }}" rel="stylesheet" type="text/css">
+        <link href="{{ asset_url_for('main.css') }}" rel="stylesheet" type="text/css">
+    {% endblock %}
+  {% endblock %}
+</head>
+<body class="{{ body_class }} overflow-x-hidden"
+      data-google-analytics-id="{{ analytics_id }}">
+    {% block body_scripts %}{% endblock %}
+
+    {% block header %}{% endblock %}
+    {% block body %}{% endblock %}
+    {% block footer %}{% endblock %}
+
+    {% block scripts %}
+        <script src="{{ asset_url_for('global.js') }}"></script>
+    {% endblock %}
+</body>
+</html>

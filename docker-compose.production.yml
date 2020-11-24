@@ -1,0 +1,37 @@
+version: '3'
+services:
+  web:
+    image: toneo/lifeloopweb_prod:3.0.0
+    restart: always
+    env_file: .env
+    environment:
+      - FLASK_APP=lifeloopweb/lifeloopweb_app.py
+    ports:
+      - "5000:5000"
+    depends_on:
+      - database
+    command: /code/web_entrypoint.sh
+  database:
+    image: percona
+    restart: always
+    volumes:
+      - ./database_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=1
+  db_util:
+    image: toneo/lifeloopweb_db_util:1.0.1
+    restart: always
+    env_file: .env
+    build:
+      context: .
+      dockerfile: Dockerfile.db_util
+    depends_on:
+      - database
+  logging:
+    image: gliderlabs/logspout
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: syslog://PAPERTRAIL_SUBDOMAIN.papertrailapp.com:PAPERTRAIL_PORT

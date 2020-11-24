@@ -1,0 +1,74 @@
+{% extends 'layout.html' %}
+{% from '_macros/other.html' import render_social %}
+{% from '_macros/global.html' import render_field %}
+
+{# USED in header.html, footer.html, layout.html #}
+{% set navbar_type = 'transparent d-flex' %}
+{% set footer_type = 'd-none d-lg-block absolute minimal' %}
+{% set body_class = 'bg bg-cu d-flex flex-column' %}
+
+{% block title %}Contact Us{% endblock %}
+
+{% block body %}
+    <div class="container d-flex flex-column justify-content-center mb-md-5" style="flex: 1;">
+        <div class="row align-items-center mb-md-5">
+            <div class="col-12 col-md-6 col-lg-5 col-xl-3 ml-auto pr-lg-5">
+                <div class="text-center">
+                    <img src="{{ asset_url_for('images/logo/tree.png') }}"
+                         class="mb-2 d-none d-md-inline" alt="lifeloop logo tree">
+                    <h2>Contact us</h2>
+                    <p class="font-xlight d-block d-md-none text-secondary">
+                        Enter details in form below
+                    </p>
+                </div>
+
+                <form method="post" action="{{ url_for('contact') }}">
+                    {{ form.csrf_token(id=False) }}
+
+                    <div class="form-group">
+                        {{ render_field(form.name, class='form-control-lg') }}
+                    </div>
+                    <div class="form-group">
+                        {{ render_field(form.email, class='form-control-lg') }}
+                    </div>
+                    <div class="form-group">
+                        {{ render_field(form.phone, class='form-control-lg') }}
+                    </div>
+                    <div class="form-group">
+                        {{ render_field(form.message, placeholder='How can we help you?', rows=5) }}
+                    </div>
+                    {% if recaptcha %}
+                        <div class="form-group text-center d-flex justify-content-center">
+                            {{ recaptcha }}
+                        </div>
+                    {% endif %}
+                    <div class="text-center mb-4 mb-lg-0">
+                        {{ render_field(form.submit, class='btn btn-danger btn-lg') }}
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-12 d-none d-md-block col-md-6 col-lg-6 col-xl-7 pl-lg-5">
+                <h1 class="font-light mb-4">
+                    Got questions?
+                    <br>
+                    We're here to help!
+                </h1>
+
+                <p class="font-xlight font-italic text-secondary mb-5">
+                    Need help getting started or have any other questions about LifeLoop.Live?
+                    <br>
+                    Reach out to our friendly support team now.
+                </p>
+
+                <div class="social-links">
+                    {{ render_social() }}
+                </div>
+            </div>
+
+            <div class="col-12 d-flex justify-content-center d-md-none mb-4">
+                {{ render_social() }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

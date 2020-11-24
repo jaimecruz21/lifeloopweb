@@ -1,0 +1,122 @@
+{% extends 'layout.html' %}
+{% from '_macros/global.html' import render_field %}
+
+{% block title %}Login{% endblock %}
+
+{% set navbar_type = 'transparent w-100' %}
+{% set footer_type = 'minimal' %}
+
+{% set body_class = 'bg-l d-flex flex-column' %}
+
+{% block body %}
+    <div class="container-fluid d-flex flex-column" style="flex: 1;" id="authPage">
+        <div class="row text-center" style="flex: 1;">
+            <div class="col col-lg-auto px-4 pt-5 pt-md-0 d-flex order-2 order-lg-1 bg-white align-items-center justify-content-center"
+                 id="signup-col">
+                <div id="signup-desktop-toggle">
+                    <h1 class="font-light">
+                        Don't<br>
+                        have an<br>
+                        account<br>
+                        yet?
+                    </h1>
+
+                    <p class="text-muted font-xlight mb-5">
+                        You can create it right now
+                    </p>
+
+                    <a href="#" class="btn btn-outline-primary btn-lg" id="show-signup-desktop">
+                        Sign Up</a>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-4 col-xl-4 mx-auto d-none" id="signup-content">
+                    {% if token %}
+                        {% set action = url_for('register_by_invite', token=token) %}
+                    {% else %}
+                        {% set action = url_for('register') %}
+                    {% endif %}
+
+                    <form method="post" action="{{ action }}">
+                        {{ form.csrf_token(id=False) }}
+
+                        <h1 class="font-light mb-0">
+                            Sign up
+                        </h1>
+                        <p class="lead font-xlight text-muted">
+                            Enter details in form below
+                        </p>
+
+                        <div class="form-group text-left">
+                            {{ render_field(form.email, class='form-control-lg', id='signupEmail') }}
+                        </div>
+
+                        <div class="form-group d-flex justify-content-center">
+                            {% if recaptcha %}
+                                {{ recaptcha }}
+                            {% endif %}
+                        </div>
+
+                        {{ render_field(form.submit, class='btn btn-primary btn-lg mb-3 mb-lg-0') }}
+
+                        <div id="login-mobile-toggle">
+                            <p class="text-muted font-xlight">
+                                Already have an account?<br>
+                                You can
+                                <a href="#" id="show-login-mobile">enter to it</a>
+                                right now
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col col-lg px-4 pt-5 pt-md-0 order-1 order-lg-2 text-white align-items-center justify-content-center d-flex"
+                 id="login-col">
+                <form id="login-content" method="post" action="{{ url_for('login', next=request.args.get('next')) }}"
+                      class="col-12 col-md-6 col-lg-4 col-xl-4 mx-auto">
+                    {{ form.csrf_token(id=False) }}
+
+                    <h1 class="font-light mb-0">Log In</h1>
+                    <p class="lead font-xlight">Enter details in form below</p>
+                    <p>
+                        <a href="{{ url_for('forgot_password') }}">
+                            Forgot your password?</a>
+                    </p>
+
+                    <div class="form-group text-left">
+                        {{ render_field(form.email, class='form-control-lg', id='loginEmail') }}
+                    </div>
+                    <div class="form-group text-left">
+                        {{ render_field(form.password, class='form-control-lg') }}
+                    </div>
+
+                    {{ render_field(form.submit, class='btn btn-danger btn-lg my-3 mb-lg-0') }}
+                    <input type="hidden" value="{{ next or '' }}" name="next">
+
+                    <div id="signup-mobile-toggle">
+                        <p class="text-muted font-xlight">
+                            Don't have an account yet?<br>
+                            You can
+                            <a href="#" class="text-danger" id="show-signup-mobile">create it</a>
+                            right now
+                        </p>
+                    </div>
+                </form>
+
+                <div class="d-none" id="login-desktop-toggle">
+                    <h1 class="font-light">Already<br>have an<br>account?</h1>
+                    <p class="lead font-xlight text-muted mb-5">
+                        You can enter to it right now
+                    </p>
+                    <a href="#" class="btn btn-outline-danger btn-lg" id="show-login-desktop">Log In</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+
+    <script src="{{ asset_url_for('login.js') }}"></script>
+{% endblock %}

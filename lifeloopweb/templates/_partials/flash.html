@@ -1,0 +1,11 @@
+{% from '_macros/global.html' import render_alert, render_anchor %}
+
+<div id="messages" data-success-timeout="{{ success_flash_timeout }}">
+    {% for category in ('success', 'info', 'warning', 'danger') %}
+        {% with messages = get_flashed_messages(category_filter=[category]) %}
+            {% if messages %}
+                {{ render_alert(messages, category) }}
+            {% endif %}
+        {% endwith %}
+    {% endfor %}
+</div>

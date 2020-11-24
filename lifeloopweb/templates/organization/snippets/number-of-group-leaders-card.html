@@ -1,0 +1,83 @@
+{% from '_macros/global.html' import render_card, render_field, render_icon %}
+
+{% set subheader %}
+    {{ render_icon('info', class='mt-2 mt-sm-0 mb-5 mb-sm-auto mr-3 mr-sm-2 float-left float-sm-none') }}
+    Select the number of leaders you would like to have in your organization. A minimum of one leader is required.
+    Add your second leader for only $15!
+{% endset %}
+
+{% call render_card('Number of Group Leaders', class='h-100', subheader=subheader,
+                                    body='p-3 d-flex flex-column justify-content-between') %}
+    <form action="{{ url_for('orgs.billing_update', org_id=org.id) }}" method="POST" id="leaderUpdateForm">
+        {{ form.csrf_token(id=False) }}
+
+        <div class="form-group"
+            data-hint="Make sure that this number is set according to your needs!">
+            {{ render_field(form.quantity) }}
+        </div>
+    </form>
+
+    {% if org.purchased_licenses %}
+        <table class="table table-bordered text-center mb-5">
+            {% if org.is_in_trial() %}
+                <p>You are currently in a free trial, and will be charged the below amount on your next billing date.</p>
+            {% endif %}
+
+        <tbody>
+            <tr>
+                <td class="align-middle">1 License</td>
+                <td class="align-middle">Basic Package</td>
+                <td class="align-middle">${{ '%0.2f'| format(product_price * 0.01|float) }}</td>
+            </tr>
+            <tr>
+                <td class="align-middle" id="billing-quantity">
+                    {{ org.purchased_licenses }} Additional
+
+                    {% if org.purchased_licenses == 1 %}
+                        License
+                    {% else %}
+                        Licenses
+                    {% endif %}
+                </td>
+                <td>
+                    <span id="billing-price">
+                        ${{ '%0.2f'| format(product_price * 0.01|float) }}
+                    </span>
+                    <br>
+                    each
+                </td>
+                <td>
+                    <span id="billing-total">
+                        ${{ '%0.2f'| format(org.purchased_licenses * product_price|float) }}
+                    </span>
+                </td>
+            </tr>
+            {% if org.coupon %}
+                <tr>
+                    <td style="color: green"><i>Discount</i></td>
+                    <td style="color: green"><i>{{ org.coupon }}</i></td>
+                    <td style="color: green"><i>
+                        <span id="billing-discount" data-discount="{{ org.discount }}">
+                            $ 0
+                        </span></i>
+                    </td>
+                </tr>
+                <tr>
+            {% endif %}
+                <td></td>
+                <td>Total Cost</td>
+                <td>
+                    <span id="billing-final">
+                        $ {{ '%0.2f'| format(product_price * 0.01|float) }}
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+        </table>
+    {% endif %}
+
+    <div class="text-right">
+        {{ render_field(form.submit, form='leaderUpdateForm') }}
+    </div>
+
+{% endcall %}

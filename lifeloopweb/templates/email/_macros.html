@@ -1,0 +1,15 @@
+{% macro render_button(url, text) %}
+    <br>
+    <table cellpadding="10" border="0" align="center" style="border-collapse: collapse; color: #ffffff;">
+        <tr>
+            <td bgcolor="#283c66" valign="middle" align="center"
+                style="padding-left: 30px; padding-right: 30px; border-radius: 3px; font-family: 'Roboto', Tahoma, Verdana, sans-serif !important;">
+                <div style="font-size: 18px; color: #ffffff; line-height: 1; margin: 0; padding: 0;">
+                    <a href="{{ url }}" style="text-decoration: none; color: #ffffff;" target="_blank">
+                        {{ text }}</a>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <br>
+{% endmacro %}

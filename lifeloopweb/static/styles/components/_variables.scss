@@ -1,0 +1,21 @@
+$color-primary: #2874d4;
+$color-danger: #ff295f;
+$color-secondary: #a6a6a7;
+$color-secondary2: #f7f7f7;
+$color-grey: #5d5d5d;
+$color-navbar-secondary: #6f737e;
+
+// USER profile
+$bg-profile: #f6f6f6;
+$hover-color: #fcfcfc;
+
+// BOOTSTRAP Overrides
+$cyan: #314471 !default;
+$bg-elem-color: #5a698d;
+$custom-control-indicator-checked-bg: $bg-elem-color;
+$custom-control-indicator-focus-box-shadow: 0 0 0 1px $bg-profile, 0 0 0 3px $bg-elem-color;
+$btn-focus-box-shadow: none !important;
+$btn-active-box-shadow: none !important;
+$toggler-color: rgba(255, 255, 255, 1);
+$navbar-light-toggler-icon-bg: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgb(111, 115, 126)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+$navbar-dark-toggler-icon-bg: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='" + $toggler-color + "' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");

@@ -1,0 +1,52 @@
+######## YARN BUILD CONTAINER
+FROM node:alpine AS yarn_build
+RUN apk update && apk upgrade && apk --update add yarn
+
+WORKDIR /code
+COPY . /code
+RUN yarn build_prod
+
+####### LIBS ONLY CONTAINER
+FROM python:3.6.4-alpine3.7 as libs_only
+
+COPY --from=lifeloopweb /usr/lib /temp_lib
+RUN mkdir /libs_only
+
+# If anything is "omitted" by the copy command (which is ok) the exit code isn't 0
+RUN cp -d /temp_lib/lib* /libs_only; true
+
+######## FINAL CONTAINER
+
+FROM python:3.6.4-alpine3.7
+
+# Copy the code in
+WORKDIR /code
+COPY --from=lifeloopweb /code/lifeloopweb/ /code/lifeloopweb
+ADD docker/web_entrypoint.sh /code
+COPY --from=lifeloopweb /code/lifeloopweb.egg-info/ /code/lifeloopweb.egg-info
+COPY --from=yarn_build /code/lifeloopweb/build/ /code/lifeloopweb/build/
+
+# Get Dockerize
+COPY --from=lifeloopweb /usr/local/bin/dockerize /usr/local/bin/dockerize
+
+# Copy bins we need
+COPY --from=lifeloopweb /usr/local/bin/flask /usr/local/bin/flask
+COPY --from=lifeloopweb /usr/local/bin/lifeloop_db_manage /usr/local/bin/lifeloop_db_manage
+
+# Copy over installed python packages
+COPY --from=lifeloopweb /usr/local/lib/python3.6/site-packages/ /usr/local/lib/python3.6/site-packages/
+
+# Copy shared libs
+#
+# How this Works:
+#
+# * Copies the entire /usr/lib dir out of the dev images to a temp container
+# * Runs a command inside the container to copy all the shared libs
+#   into another path but not recurse
+# * Builds the prod container by referring to the temporary copy container
+# This little song and dance ends up saving 150MB in the prod container
+# We also can't do it solely in the prod container as space can't be saved
+# by running an rm. The layer containing the lib files we don't need remains
+# attached to the container
+COPY --from=lifeloopweb /lib /lib
+COPY --from=libs_only /libs_only /usr/lib

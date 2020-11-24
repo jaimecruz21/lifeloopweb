@@ -1,0 +1,48 @@
+<div class="form-group mb-3">
+    <strong>Notification Type:</strong>
+    <div>
+        {{ type }}
+    </div>
+</div>
+
+<div class="form-group mb-3">
+    <strong>From:</strong>
+    <div>
+        {{ user_from['first_name'] }}
+        {{ user_from['last_name'] }}
+        <br>
+        {{ user_from['email'] }}
+        {% if user_from.get('phone_number') %}
+            <br>
+            {{ user_from['phone_number'] }}
+
+        {% endif %}
+    </div>
+</div>
+
+{% if org_name %}
+    <div class="form-group mb-0">
+        <strong>Organization:</strong>
+        <div>
+            {{ org_name }}
+            <br>
+            {{ org_address }}
+        </div>
+    </div>
+{% endif %}
+
+{% if group_name %}
+    <div class="form-group mb-3">
+        <strong>Group:</strong>
+        <div>
+            {{ group_name }}
+        </div>
+    </div>
+
+    <div class="form-group mb-0">
+        <strong>Parent Organization:</strong>
+        <div>
+            {{ parent_org_name }}
+        </div>
+    </div>
+{% endif %}

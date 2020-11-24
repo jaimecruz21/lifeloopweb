@@ -1,0 +1,22 @@
+{% from '_macros/global.html' import render_card, render_icon, render_list_group %}
+
+{% set heading = 'Documents' %}
+{% set empty = 'No documents' %}
+
+{% if current_user_can_edit_group %}
+    {% set actions %}
+        <a href="#modalAddDocument" class="btn btn-primary btn-sm d-flex align-items-center" data-toggle="modal"
+           id="btnAddDocumentModal">
+            {{ render_icon('plus', class='mr-2') }}
+            Add Document
+        </a>
+    {% endset %}
+{% endif %}
+
+{% call render_card(heading, class='flex-1', body='mb-0 d-flex justify-content-between flex-column', actions=actions) %}
+    {% call(document) render_list_group(documents, empty=empty) %}
+        {{ document.render_as_list_group_item(context={
+            'group_id': group.id
+        }) }}
+    {% endcall %}
+{% endcall %}

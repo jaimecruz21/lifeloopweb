@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+{% block head %}
+  {{ super() }}
+  <meta http-equiv="refresh" content="5;url={{ website_url }}" />
+{% endblock %}
+{% block title %}Redirect{% endblock %}
+
+{% set body_class = 'd-flex justify-content-between flex-column' %}
+
+{% block body %}
+    <div class="container text-center my-auto align-items-center">
+        <div class="mb-5 pb-lg-5">
+            <h2 class="mb-4">
+              You are being redirected to {{ website_name }} because <strong>{{ redirect_reason }}</strong>
+            </h2>
+            <p>
+              Please click <a ref="{{ website_url }}" target="_blank">here</a>, if not redirected.
+            </p>
+        </div>
+    </div>
+{% endblock %}

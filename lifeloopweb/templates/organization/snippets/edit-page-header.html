@@ -1,0 +1,28 @@
+{% from '_macros/global.html' import render_icon %}
+
+<div class="page-header mt-4 mt-lg-5 mb-2 mb-lg-4 p-3 px-lg-4 d-flex align-items-center justify-content-between">
+    <h6 class="m-0">
+        Organization Administration Page
+        <span class="mx-2 text-secondary d-none d-sm-inline">|</span>
+        <span class="text-danger d-block d-sm-inline">
+            <a href="{{ url_for('orgs.show', org_id=org.id) }}">
+                {{ org.name }}
+            </a>
+        </span>
+    </h6>
+
+    {% if is_payed_up %}
+        <div class="d-none d-lg-flex">
+            <a href="#" class="btn btn-sm btn-secondary mr-3 d-flex align-items-center collapsed"
+               aria-expanded="false" id="analyticsToggle"
+               data-toggle="collapse" data-target=".analytics-collapse"
+               aria-controls="org-edit-db-analytics org-edit-google-analytics1 org-edit-google-analytics2">
+                {{ render_icon('eye', class='mr-2') }}
+                View Analytics
+                <sup class="text-danger ml-1">BETA</sup>
+            </a>
+
+            {{ textMembersActions }}
+        </div>
+    {% endif %}
+</div>

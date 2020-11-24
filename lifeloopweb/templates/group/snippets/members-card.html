@@ -1,0 +1,101 @@
+{% from '_macros/global.html' import render_card, render_tooltip, render_icon %}
+
+{% set actions %}
+    {% if current_user_can_edit_group %}
+        <div class="d-flex">
+            {% call render_tooltip('Text group members') %}
+                <a href="#modalText" data-toggle="modal" class="btn btn-primary btn-sm">
+                    {{ render_icon('text') }}
+                </a>
+            {% endcall %}
+
+            {% call render_tooltip('Email all members') %}
+                <a href="#modalMassEmail" class="btn btn-primary ml-2 btn-sm"
+                   data-toggle="modal" id="btnMassEmail">
+                    {{ render_icon('mail') }}
+                </a>
+            {% endcall %}
+
+            {% if group.is_joinable() %}
+                {% call render_tooltip('Add group member') %}
+                    <a href="#modalAddMember" class="btn btn-primary btn-sm ml-2 d-flex"
+                       data-toggle="modal" id="btnAddModal">
+                        {{ render_icon('plus', class='mr-2') }}
+                        {{ render_icon('user') }}
+                    </a>
+                {% endcall %}
+            {% endif %}
+        </div>
+    {% else %}
+        <a href="#modalEmailGroupLeader" class="btn btn-primary btn-sm d-flex"
+           data-toggle="modal" id="btnEmailGroupLeader">
+            {{ render_icon('mail', class='mr-2') }}
+            Email Group Leader
+        </a>
+    {% endif %}
+{% endset %}
+
+{% set subheader %}
+    <div class="d-flex float-left float-sm-none mt-1 mt-sm-0 mr-auto">
+        {{ render_icon('info', class='mr-2') }}
+        {{ members|length }} members
+    </div>
+
+    <div class="float-right float-sm-none mt-1 mt-sm-0">
+        {% if group.is_joinable() %}
+            {% if group.member_limit %}
+                Available to join: {{ group.member_limit - members|length }}
+            {% else %}
+                Unlimited members
+            {% endif %}
+        {% else %}
+            This Group is
+            <br class="d-inline d-md-none">
+            Currently Full
+        {% endif %}
+    </div>
+{% endset %}
+
+{% call render_card('Members', class='mb-4', body='d-flex justify-content-between flex-column', height=272,
+                    subheader=subheader, actions=actions) %}
+    {% if current_user_can_view_group_items %}
+        {% if members %}
+            <div class="list-group list-group-flush with-border scrollable">
+                {% for user, _, role in members %}
+                    <div class="list-group-item d-flex align-items-center">
+                        {{ user.render_main_image() }}
+                        <div>
+                            <p class="font-weight-normal mb-1">
+                                {% if group.anonymous %}
+                                    {{ user.first_name }}
+                                {% else %}
+                                    {{ user.full_name }}
+                                {% endif %}
+                            </p>
+                            <div class="text-secondary3">
+                                {{ role.description }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="p-4">
+                No users
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="p-5 text-center">
+            {% if group.is_joinable() %}
+                <a href="#" class="btn btn-primary p-3 d-inline-flex justify-content-center confirm"
+                   data-action="{{ url_for('groups.join_request', group_id=group.id) }}"
+                   data-title="Confirm Group Join Request" id="btnRequestToJoin">
+                    {{ render_icon('mail', class='mr-2') }}
+                    Request to Join Group
+                </a>
+            {% else %}
+                This Group is Currently Full
+            {% endif %}
+        </div>
+    {% endif %}
+{% endcall %}

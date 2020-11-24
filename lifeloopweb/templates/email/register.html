@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import render_button %}
+
+{% block title %}Welcome to the LifeLoop.Live community!{% endblock %}
+
+{% block content %}
+    <p>
+        Please click the button below to verify your email address and complete the registration process.
+    </p>
+    <p>
+        CONNECT AND GROW TOGETHER
+    </p>
+    <p>
+        LifeLoop is your social and real-time interactive community connecting people to churches and ministries
+    </p>
+    <p>
+        If you have any issues completing the registration process we would be happy to help you. You can contact us at
+        <a href="mailto:support@lifeloop.live">Support@LifeLoop.Live</a>
+    </p>
+    {{ render_button(token_url, 'Click here to complete your registration!') }}
+{% endblock %}

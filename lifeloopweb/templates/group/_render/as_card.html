@@ -1,0 +1,47 @@
+{% from '_macros/global.html' import render_card %}
+
+{% set groupActions %}
+    <a href="{{ url_for('groups.show', group_id=group.id) }}" class="btn btn-primary btn-sm">
+        <span class="d-inline-flex align-items-center">
+            More info
+        </span>
+    </a>
+{% endset %}
+
+{% call render_card(group.name, class='w-100 h-100', body='pb-3', actions=groupActions) %}
+    <a href="{{ url_for('groups.show', group_id=group.id) }}" class="d-block mb-3"
+       style="height: 200px; background: url('{{ group.main_image.url }}') no-repeat top; background-size: cover">
+    </a>
+    <div class="p-3">
+        {% if group.organizations %}
+            <h3 class="mb-3">
+                {{ group.parent_org.name }}
+            </h3>
+        {% endif %}
+
+        {% set gender_focus_formatted = group.gender_focus_formatted %}
+
+        {% if gender_focus_formatted %}
+            <span class="badge badge-primary mb-1">
+                {{ gender_focus_formatted }}
+            </span>
+        {% endif %}
+
+        {% if group.age_range %}
+            <span class="badge badge-warning mb-1">
+                {{ group.age_range.description }}
+            </span>
+        {% endif %}
+
+        {% for meet_time in group.get_meet_times %}
+            <span class="badge badge-danger mb-1">
+                {{ meet_time }}
+            </span>
+        {% endfor %}
+    </div>
+    <div class="px-3 mb-auto">
+        <div class="scrollable pr-2" style="max-height: 75px;">
+            {{ group.description|safe }}
+        </div>
+    </div>
+{% endcall %}

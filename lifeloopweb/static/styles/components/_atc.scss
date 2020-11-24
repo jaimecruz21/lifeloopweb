@@ -1,0 +1,22 @@
+.atcb-list {
+    position: fixed;
+    border: 1px solid rgba(0, 0, 0, .15);
+    box-shadow: 0 9px 12px rgba(0, 0, 0, .1);
+    border-radius: 4px;
+    left: auto;
+    right: 0 !important;
+    width: 134px;
+
+    > li {
+        border-radius: 4px;
+
+        > a {
+            padding: 7px 15px;
+            border-radius: 4px;
+
+            &:hover {
+                background-color: #f8f9fa;
+            }
+        }
+    }
+}

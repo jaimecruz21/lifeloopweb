@@ -1,0 +1,56 @@
+{% from '_macros/global.html' import render_card, render_field, render_icon %}
+
+{% call render_card('My Profile information', class='h-100', body='p-3 d-flex justify-content-between flex-column') %}
+    <form method="post" action="{{ url_for('users.profile', user_id=current_user.id) }}" id="{{ form_id }}">
+        {{ form.csrf_token(id=False) }}
+        {{ render_field(form.timezone_default, id='tz_default', label=False) }}
+
+        <div class="row">
+            <div class="col-12 col-lg-6">
+                <div class="form-group">
+                    {{ render_field(form.first_name) }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.last_name) }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.email) }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.phone_number, class='phone_us') }}
+                </div>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="form-group">
+                    {{ render_field(form.city) }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.timezone, class='timezonepicker') }}
+                </div>
+                <div class="form-group">
+                    <label>Birthday</label>
+                    <div class="row no-gutters">
+                        <div class="col-12 col-sm mb-3 mb-sm-0">
+                            {{ render_field(form.month_of_birth, label=False) }}
+                        </div>
+                        <div class="col-12 col-sm mb-3 mb-sm-0 px-0 px-sm-3">
+                            {{ render_field(form.day_of_birth, label=False) }}
+                        </div>
+                        <div class="col-12 col-sm mb-3 mb-sm-0">
+                            {{ render_field(form.year_of_birth, label=False) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group pt-lg-3">
+                    {{ render_field(form.opt_in_texts, label=False, class='label') }}
+                </div>
+                <div class="form-group">
+                    {{ render_field(form.opt_in_emails, label=False, class='label') }}
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="text-center text-lg-right mt-auto">
+        {{ render_field(form.submit, id='btnUpdateUser', form=form_id) }}
+    </div>
+{% endcall %}

@@ -1,0 +1,81 @@
+{% from '_macros/global.html' import render_icon, render_tooltip %}
+
+<div class="row no-gutters w-75">
+    <div class="col-12 col-lg-8 mb-3 mb-lg-0 pr-0 pr-lg-3">
+        <a href="{{ url_for('groups.show', group_id=group.id) }}"
+           class="font-weight-normal">
+            <u>
+                {{ group.name }}
+            </u>
+        </a>
+        <div class="text-secondary">
+            Number of Leaders: {{ group.leaders|length }}
+            <br>
+            Created: {{ group.created_at.strftime('%m/%d/%Y %H:%M') }}
+        </div>
+    </div>
+    <div class="col mb-3 mb-lg-0">
+        <div class="org-users dropdown show" id="memberRole">
+            {% set group_users = group.users %}
+            {% set group_users_show = group_users[:3] %}
+            {% set show_dropdown = group_users|length > 3 %}
+
+            <span id="dropdownMenuLink{{ group.id }}"
+                  class="dropdown-toggle d-block no-chevron"
+                  {% if show_dropdown %}data-toggle="dropdown"
+                  aria-haspopup="true"{% endif %}
+                  aria-expanded="false">
+                {% for user in group_users_show %}
+                    {{ user.render_main_image(35, 35,
+                        class='org-user-' + loop.index|string) }}
+                {% endfor %}
+
+                {% if show_dropdown %}
+                    <span class="org-user-count">
+                        +{{ group_users[3:]|length }}
+                    </span>
+                {% endif %}
+            </span>
+
+            {% if show_dropdown %}
+                <div class="dropdown-menu dropdown-menu-sm"
+                     aria-labelledby="dropdownMenuLink{{ group.id }}">
+                    {% for user in group_users[3:] %}
+                        <a class="dropdown-item d-flex align-items-center">
+                            {{ user.render_main_image(35, 35) }}
+                            {{ user.short_name }}
+                        </a>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<div class="btn-group d-lg-none d-flex align-items-center" role="group">
+    {% if current_user.can_edit_group(group_id=group.id) %}
+        {% call render_tooltip('Edit group', placement='left') %}
+            <a href="{{ url_for('groups.edit', group_id=group.id) }}">
+                {{ render_icon('settings') }}
+            </a>
+        {% endcall %}
+    {% endif %}
+
+    {% if group.organizations|length == 1 or org == group.parent_org %}
+        {% call render_tooltip('Archive group', placement='left', class='ml-3') %}
+            <a class="confirm" href="#"
+               data-action="{{ url_for('orgs.group_delete', org_id=org.id, group_id=group.id) }}"
+               data-title="Confirm Archive Group">
+                {{ render_icon('archive') }}
+            </a>
+        {% endcall %}
+    {% else %}
+        {% call render_tooltip('Unaffiliate', placement='left', class='ml-3') %}
+            <a href="#" class="confirm"
+               data-action="{{ url_for('orgs.group_unaffiliate', org_id=org.id, group_id=group.id) }}"
+               data-message="Are you sure you wish to unaffiliate your organization from this group?"
+               data-title="Unaffiliate your organization">
+                {{ render_icon('leave-cross') }}
+            </a>
+        {% endcall %}
+    {% endif %}
+</div>

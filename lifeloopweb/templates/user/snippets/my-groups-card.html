@@ -1,0 +1,10 @@
+{% from '_macros/global.html' import render_card, render_list_group %}
+
+{% set heading = 'My Groups' %}
+{% set empty = "You aren't a member of any groups." %}
+
+{% call render_card(heading, body='scrollable') %}
+    {% call(group) render_list_group(user.groups, empty=empty) %}
+        {{ group.render_as_list_group_item() }}
+    {% endcall %}
+{% endcall %}

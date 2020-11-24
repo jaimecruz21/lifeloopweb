@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+
+{% from '_macros/global.html' import render_field %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row no-gutters">
+            <div class="col col-lg-8 mx-auto">
+                <h2 class="mt-5">{{ title }}</h2>
+                <small>Revision date: {{ last.created_at }}</small>
+                <form method="post" action="{{ edit_url }}">
+                    {{ form.csrf_token(id=False) }}
+                    <br>
+                    {{ render_field(form.title) }}
+                    <br>
+                    {{ render_field(form.content) }}
+                    <br>
+                    {{ render_field(form.submit) }}
+                </form>
+                <br>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="container">
+        <div class="row no-gutters">
+            <div class="col col-lg-8 mx-auto">
+                <h2 class="mt-5">{{ last.title|safe }}</h2>
+                <small>Revision date: {{ last.created_at }}</small>
+                {{ last.content|safe }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

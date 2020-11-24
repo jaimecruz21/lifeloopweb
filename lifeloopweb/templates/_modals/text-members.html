@@ -1,0 +1,20 @@
+{% from '_macros/global.html' import render_field, render_modal %}
+
+{% call render_modal(title, id='modalText') %}
+    {% if org %}
+        {% set action = url_for('orgs.text_message_create', org_id=org.id) %}
+    {% elif group %}
+        {% set action = url_for('groups.group_text_create', group_id=group.id) %}
+    {% endif %}
+
+    <form method="post" action="{{ action }}">
+        {{ form.csrf_token(id=False) }}
+        {{ form.recipient }}
+        <div class="form-group">
+            {{ render_field(form.message, rows=5) }}
+        </div>
+        <div class="text-center text-lg-right">
+            {{ render_field(form.submit, class='btn btn-primary') }}
+        </div>
+    </form>
+{% endcall %}

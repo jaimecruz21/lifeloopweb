@@ -1,0 +1,83 @@
+{% from '_macros/global.html' import render_card %}
+
+<div class="page-header px-3 px-lg-4 mt-0 mb-4 mt-lg-4 d-flex flex-row justify-content-between align-items-center">
+    <h6 class="m-0">
+        Billing Details
+        <span class="mx-2 text-secondary d-none d-lg-inline">|</span>
+        <span class="text-danger d-block d-lg-inline">
+            <a href="{{ url_for('orgs.show', org_id=org.id) }}">{{ org.name }}</a>
+        </span>
+    </h6>
+</div>
+<div class="row no-gutters">
+    <div class="col-12 col-lg-4 mb-4 mb-lg-0 pr-lg-4">
+        {% call render_card('Subscription FAQ', class='h-100', body='p-3') %}
+            <p>
+                To manage group leaders for this organization, make sure your
+                <u><a href="{{ url_for('orgs.billing', org_id=org.id) }}">billing information</a></u>
+                is up to date.
+            </p>
+            <p>
+                Each licensed member may be assigned as the leader of an unlimited number of groups.
+            </p>
+            <p>
+                Groups are required to have at least one leader. In order to remove a leader from a group, navigate
+                to the group administration page and assign a new group leader.
+            </p>
+        {% endcall %}
+    </div>
+    <div class="col-12 col-lg-4 mb-4 mb-lg-0 pr-lg-4">
+        {% set heading %}
+            Licenses Available:
+            <strong class="ml-2"
+                data-hint="You have 1 license from the basic package, and {{ org.purchased_licenses }} additional licenses.">
+                {{ org.available_licenses }}
+            </strong>
+        {% endset %}
+
+        {% call render_card(heading, class='h-100', body='p-3') %}
+            <div class="p-3 text-center text-secondary">
+                {% if org.purchased_licenses %}
+                    {{ org.purchased_licenses }}
+                {% else %}
+                    No Licenses
+                {% endif %}
+                Purchased
+            </div>
+
+            <div class="p-3 text-center text-secondary"
+                data-hint="You have {{ org.group_leader_count }} members in your organization currently assigned as leaders of groups.">
+                {% if org.group_leader_count %}
+                    {{ org.group_leader_count }}
+                    Used
+                {% else %}
+                    No licenses Used
+                {% endif %}
+            </div>
+            <div class="p-3 text-center text-secondary">
+                Next Billing Date:
+                {{ org.next_billing_date() }}
+            </div>
+
+            {% if org.is_in_trial() %}
+                <div class="p-3 text-center text-danger font-weight-bold">
+                    You are currently on a free trial, and you may use unlimited licenses in your organizations!
+                </div>
+            {% endif %}
+            <div class="p-3 text-center text-danger font-weight-bold">
+                {% if org.cancel_at_end_of_period %}
+                        You have scheduled your subscription to cease at the end of this billing period. Re-submit card information to continue using your organization!
+                {% else %}
+                    <a href="{{ url_for('orgs.billing_cancel', org_id=org.id) }}">
+                        [Cancel Subscription at End of Billing Period]
+                    </a>
+                {% endif %}
+            </div>
+        {% endcall %}
+    </div>
+    <div class="col-12 col-lg-4">
+        {% with members=org.group_leaders, creator=org.creator, licensed=True %}
+            {% include '_partials/members-card.html' %}
+        {% endwith %}
+    </div>
+</div>

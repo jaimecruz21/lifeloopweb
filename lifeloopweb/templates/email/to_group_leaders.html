@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}New message{% endblock %}
+
+{% block content %}
+    <p>
+        A LifeLoop user has a message for the group leaders of group
+        <strong>{{ group.name }}.</strong>
+    </p>
+
+    <p>
+        Member:
+        {{ user.full_name_and_email }}
+    </p>
+
+    <p>
+        Subject:
+        {{ subject }}
+    </p>
+
+    <p>
+        Message:
+        {{ message }}
+    </p>
+    <p>
+        If you need any further assistance, please email us at <a href="mailto:support@lifeloop.live">support@lifeloop.live</a>, thanks!
+    </p>    
+{% endblock %}
